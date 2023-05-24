@@ -184,6 +184,3 @@ crits$date<-as.Date(crits$date)
 ######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
 write.xlsx(crits,"/Users/Joe/Documents/College/01- Data/crit_values_TN (24 May 2023).xlsx",
            col.names=TRUE, row.names=FALSE)
-
-
-
