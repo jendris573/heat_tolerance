@@ -36,13 +36,13 @@ heating_data <- mutate(heating_data, month=month(heating_data$date))
 heating_data$julian_date <- yday(heating_data$date)
 
 #create column with unique ID
-heating_data <- mutate(heating_data, Unique_ID = paste(date, id, sep = "."))
+heating_data <- mutate(heating_data, Unique_ID = paste(date, location, id, sep = "."))
 
 heating_data <- heating_data %>%
   filter(year > 2021)
 
-heating_data <- heating_data %>%
-  filter(location == "TN")
+#heating_data <- heating_data %>%
+  #filter(location == "TN")
 
 ###############################################
 ### Code to estimate temperature thresholds ###
@@ -162,6 +162,9 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
 
 temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, control.temp=23, id=heating_data$Unique_ID, plot.est=T, boots=100)
 
+### WAIT FOR CODE TO RUN!! ###
+
+
 #Create a single dataframe of bootstrap estimates
 n_ID <- length(unique(heating_data$Unique_ID))
 pred<-bind_rows(temp[1:n_ID])
@@ -175,8 +178,11 @@ crits<-bind_rows(temp[n_ID+1:length(temp)])
 #Separate back out the date from the ID column
 crits$date<-substr(crits$id, 1, 10)
 
+#Separate back out the date from the ID column
+crits$state<-substr(crits$id, 12, 13)
+
 #remove the date from the ID column
-crits$id<-str_sub(crits$id, 12, )
+crits$id<-str_sub(crits$id, 15, )
 
 #convert these new columns back to numeric
 crits$date<-as.Date(crits$date)

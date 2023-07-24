@@ -18,7 +18,7 @@ library(gridGraphics)
 ### Data entry and preparation ###
 ##################################
 
-outputs <-read_excel ("/Users/Joe/Documents/College/01- Data/crit_values_TN.xlsx")
+outputs <- read_excel("~/Documents/College/01- Data/crit_values_June 2023.xlsx")
 
 #create column for julian date
 outputs$julian_date <- yday(outputs$date)
@@ -28,6 +28,40 @@ outputs <- mutate(outputs, month=month(outputs$date))
 
 #create column for year
 outputs <- mutate(outputs, year=year(outputs$date))
+
+##############################
+###Individual Species Plots### 
+##############################
+
+#Acer saccharum
+
+acer <- filter(outputs, id == 'Acer saccharum')
+
+acer_plot <- ggplot(acer, aes(x=date, y=Tcrit.mn))+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  xlab("Date")+
+  ylab("Critical Temperature")+
+  theme_bw()+
+  facet_wrap(~id)
+
+acer_plot
+
+
+###june to june comparison
+
+june <- filter(outputs, month == 6)
+class(outputs$month)
+
+june_plot <- ggplot(june, aes(x=year, y=Tcrit.mn))+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  xlab("Year")+
+  ylab("Critical Temperature")+
+  theme_bw()+
+  facet_wrap(~id)
+
+june_plot
 
 #######################
 ###Full species plot###
@@ -39,11 +73,12 @@ outputs_species <- outputs%>%
 
 str(outputs_species)
 
-as.factor(outputs_species$id)
+outputs_species$id <- as.factor(outputs_species$id)
+class(outputs_species$id)
 
 full_plot <- ggplot(outputs_species, aes(x= outputs_species$Tcrit.mn_mean, y= reorder(id, Tcrit.mn_mean, decreasing = TRUE, color = "red"))) +
   geom_point()+
-  geom_errorbar(data=subset(outputs_species, group_by("id")), aes(ymax=Tcrit.mn_mean+Tcrit.uci_mean,ymin=Tcrit.mn_mean-Tcrit.lci_mean, color = "red"))+
+  geom_errorbar(data=subset(outputs_species, group_by(outputs_species$id)), aes(ymax=Tcrit.mn_mean+Tcrit.uci_mean,ymin=Tcrit.mn_mean-Tcrit.lci_mean, color = "red"))+
  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
   ylab("Species")+
@@ -58,9 +93,3 @@ full_plot <- ggplot(outputs_species, aes(x= outputs_species$Tcrit.mn_mean, y= re
         axis.line = element_line(colour = "black"))
 
 full_plot
-
-
-
-
-
-
