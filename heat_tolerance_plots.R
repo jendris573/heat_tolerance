@@ -18,7 +18,7 @@ library(gridGraphics)
 ### Data entry and preparation ###
 ##################################
 
-outputs <- read_excel("~/Documents/College/01- Data/crit_values_June 2023.xlsx")
+outputs <- read_excel("~/Documents/College/01- Data/crit_values_TN (July 2023).xlsx")
 
 #create column for julian date
 outputs$julian_date <- yday(outputs$date)
@@ -34,10 +34,9 @@ outputs <- mutate(outputs, year=year(outputs$date))
 ##############################
 
 #Acer saccharum
+maple <- filter(outputs, id == 'Acer saccharum')
 
-acer <- filter(outputs, id == 'Acer saccharum')
-
-acer_plot <- ggplot(acer, aes(x=date, y=Tcrit.mn))+
+maple_plot <- ggplot(maple, aes(x=date, y=Tcrit.mn))+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   xlab("Date")+
@@ -45,8 +44,39 @@ acer_plot <- ggplot(acer, aes(x=date, y=Tcrit.mn))+
   theme_bw()+
   facet_wrap(~id)
 
-acer_plot
+maple_plot
 
+#Liriodendron tulipifera
+poplar <- filter(outputs, id == 'Liriodendron tulipifera')
+
+poplar_plot <- ggplot(poplar, aes(x=date, y=Tcrit.mn))+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  xlab("Date")+
+  ylab("Critical Temperature")+
+  theme_bw()+
+  facet_wrap(~id)
+
+poplar_plot
+
+#Fagus grandifolia
+beech <- filter(outputs, id == 'Fagus grandifolia')
+
+beech_plot <- ggplot(beech, aes(x=date, y=Tcrit.mn))+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  xlab("Date")+
+  ylab("Critical Temperature")+
+  theme_bw()+
+  facet_wrap(~id)
+
+beech_plot
+
+grid.arrange(maple_plot, poplar_plot, beech_plot,nrow=3)
+
+########################################
+### 2022 vs 2023 comparison by month ###
+########################################
 
 ###june to june comparison
 
@@ -62,6 +92,19 @@ june_plot <- ggplot(june, aes(x=year, y=Tcrit.mn))+
   facet_wrap(~id)
 
 june_plot
+
+july <- filter(outputs, month == 7)
+class(outputs$month)
+
+july_plot <- ggplot(june, aes(x=year, y=Tcrit.mn))+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  xlab("Year")+
+  ylab("Critical Temperature")+
+  theme_bw()+
+  facet_wrap(~id)
+
+july_plot
 
 #######################
 ###Full species plot###

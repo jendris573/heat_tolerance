@@ -188,6 +188,6 @@ crits$id<-str_sub(crits$id, 15, )
 crits$date<-as.Date(crits$date)
 
 ######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
-write.xlsx(crits,"/Users/Joe/Documents/College/01- Data/crit_values_TN (June 2023).xlsx",
+write.xlsx(crits,"/Users/Joe/Documents/College/01- Data/crit_values_final.xlsx",
            col.names=TRUE, row.names=FALSE)
 
