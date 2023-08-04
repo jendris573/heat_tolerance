@@ -245,4 +245,25 @@ July2023 <- ggplot(outputs%>%
         axis.line = element_line(colour = "black"))
 July2023
 
+#look at variation in species by year
+July_var <- ggplot(outputs%>%
+                     filter(month==7), aes(y= Tcrit.mn, x= id,colour="year")) +
+  coord_flip()+
+  geom_point(position=position_dodge(height=0.5))+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),position=position_dodge(height=0.5))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+July_var
+
 grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
+grid.arrange(July2022,July2023,ncol=2)
