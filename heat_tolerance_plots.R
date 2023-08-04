@@ -19,6 +19,10 @@ library(gridGraphics)
 ##################################
 
 outputs <- read_excel("~/Documents/College/01- Data/crit_values_TN (July 2023).xlsx")
+#For Evan's readin
+outputs <- read_excel("C:/R/heat_tolerance/crit_values_final.xlsx")
+#filter just TN data
+outputs<-outputs[which(outputs$state=="TN"),]
 
 #create column for julian date
 outputs$julian_date <- yday(outputs$date)
@@ -110,6 +114,10 @@ july_plot
 ###Full species plot###
 #######################
 
+#This summary below takes a mean of confidence intervals created for each study period
+#You wouldn't want to do that. We would either need to recalculate the thermal tolerance
+#for each species while ignoring sample period (Which I don't recommend)
+#or plot the Tcrit and confidence interval for each sample period separately
 outputs_species <- outputs%>%
   group_by(id)%>%
   dplyr::summarise(across(Tcrit.lci:T95.uci, list(mean=~mean(.))))
@@ -117,16 +125,60 @@ outputs_species <- outputs%>%
 str(outputs_species)
 
 outputs_species$id <- as.factor(outputs_species$id)
+outputs$id <- as.factor(outputs$id)
 class(outputs_species$id)
 
-full_plot <- ggplot(outputs_species, aes(x= outputs_species$Tcrit.mn_mean, y= reorder(id, Tcrit.mn_mean, decreasing = TRUE, color = "red"))) +
+full_plot <- ggplot(outputs_species, aes(y= Tcrit.mn_mean, x= reorder(id, Tcrit.mn_mean, decreasing = TRUE))) +
+  coord_flip()+
   geom_point()+
-  geom_errorbar(data=subset(outputs_species, group_by(outputs_species$id)), aes(ymax=Tcrit.mn_mean+Tcrit.uci_mean,ymin=Tcrit.mn_mean-Tcrit.lci_mean, color = "red"))+
+  geom_errorbar(aes(ymax=Tcrit.uci_mean,ymin=Tcrit.lci_mean))+
  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
   ylab("Species")+
   xlab("Critical Temperature")+
-  xlim(40, 65)+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))+
+
+full_plot
+
+#Evan's version to plot LT50 by each sample period
+full_plot <- ggplot(outputs, aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))+
+  facet_wrap(~month+year)#since facet_wrap - the species will stay in the same order regardless of
+#changing LT values. Therefore it is probably necessary to make a figure for each sample period
+full_plot
+
+#June 2022
+June2022 <- ggplot(outputs%>%
+                      filter(year==2022,month==6), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
   theme_bw()+
   theme(legend.position="none")+
   theme(panel.border = element_blank(),  
@@ -134,5 +186,63 @@ full_plot <- ggplot(outputs_species, aes(x= outputs_species$Tcrit.mn_mean, y= re
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(colour = "black"))
+June2022
 
-full_plot
+July2022 <- ggplot(outputs%>%
+                     filter(year==2022,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+July2022
+
+June2023 <- ggplot(outputs%>%
+                     filter(year==2023,month==6), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+June2023
+
+July2023 <- ggplot(outputs%>%
+                     filter(year==2023,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Species")+
+  xlab("Critical Temperature")+
+  ylim(30, 55)+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+July2023
+
+grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
