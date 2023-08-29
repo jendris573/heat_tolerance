@@ -18,9 +18,11 @@ library(gridGraphics)
 ### Data entry and preparation ###
 ##################################
 
-outputs <- read_excel("~/Documents/College/01- Data/crit_values_TN (July 2023).xlsx")
+outputs <- read_excel("~/Documents/College/01- Data/crit_values_final.xlsx")
+
 #For Evan's readin
-outputs <- read_excel("C:/R/heat_tolerance/crit_values_final.xlsx")
+#outputs <- read_excel("C:/R/heat_tolerance/crit_values_final.xlsx")
+
 #filter just TN data
 outputs<-outputs[which(outputs$state=="TN"),]
 
@@ -36,6 +38,9 @@ outputs <- mutate(outputs, year=year(outputs$date))
 ##############################
 ###Individual Species Plots### 
 ##############################
+
+#filter for only June/July data for comparisons
+species_outputs <- 
 
 #Acer saccharum
 maple <- filter(outputs, id == 'Acer saccharum')
@@ -134,8 +139,8 @@ full_plot <- ggplot(outputs_species, aes(y= Tcrit.mn_mean, x= reorder(id, Tcrit.
   geom_errorbar(aes(ymax=Tcrit.uci_mean,ymin=Tcrit.lci_mean))+
  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
   theme_bw()+
   theme(legend.position="none")+
@@ -154,8 +159,8 @@ full_plot <- ggplot(outputs, aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasin
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
   theme_bw()+
   theme(legend.position="none")+
@@ -176,9 +181,10 @@ June2022 <- ggplot(outputs%>%
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
+  ggtitle("June 2022")+
   theme_bw()+
   theme(legend.position="none")+
   theme(panel.border = element_blank(),  
@@ -195,9 +201,10 @@ July2022 <- ggplot(outputs%>%
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
+  ggtitle("July 2022")+
   theme_bw()+
   theme(legend.position="none")+
   theme(panel.border = element_blank(),  
@@ -214,9 +221,10 @@ June2023 <- ggplot(outputs%>%
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
+  ggtitle("June 2023")+
   theme_bw()+
   theme(legend.position="none")+
   theme(panel.border = element_blank(),  
@@ -233,9 +241,10 @@ July2023 <- ggplot(outputs%>%
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
+  ggtitle("July 2023")+
   theme_bw()+
   theme(legend.position="none")+
   theme(panel.border = element_blank(),  
@@ -246,24 +255,26 @@ July2023 <- ggplot(outputs%>%
 July2023
 
 #look at variation in species by year
-July_var <- ggplot(outputs%>%
-                     filter(month==7), aes(y= Tcrit.mn, x= id,colour="year")) +
+
+july_variation <- outputs %>%
+  filter(month==7)
+
+july_var <- ggplot(july_variation, aes(y= Tcrit.mn, x= id, color=year)) +
   coord_flip()+
-  geom_point(position=position_dodge(height=0.5))+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),position=position_dodge(height=0.5))+
-  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
-  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Species")+
-  xlab("Critical Temperature")+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  ylab("Critical Temperature")+
+  xlab("Species")+
   ylim(30, 55)+
+  ggtitle("July")+
   theme_bw()+
-  theme(legend.position="none")+
+  #theme(legend.position="none")+
   theme(panel.border = element_blank(),  
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(colour = "black"))
-July_var
+july_var
 
 grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
 grid.arrange(July2022,July2023,ncol=2)
