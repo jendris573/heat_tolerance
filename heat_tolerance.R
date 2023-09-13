@@ -21,7 +21,7 @@ library(stringr)
 ##################################
 
 #read in data
-heating_data<-read_excel("~/Library/CloudStorage/GoogleDrive-jendris@my.apsu.edu/.shortcut-targets-by-id/1p5eHgH8eX9-QjkyyA3uRz5Lk7ontMZtO/Rehm lab - General/Trees/2- Heating/Data/Leaf Heating.xlsx")
+heating_data<-read_excel("~/Documents/College/02- R code/heating/data/leaf_heating.xlsx")
 
 #look at data structure
 str(heating_data)

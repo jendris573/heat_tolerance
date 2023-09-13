@@ -1,5 +1,6 @@
-###Heating Tolerance Plots###
-###Code written by Joe Endris###
+### Heating Tolerance Plots
+### code written by Joe Endris
+### with guidance from Evan Rehm
 
 library(dplyr)
 library(tidyr)
