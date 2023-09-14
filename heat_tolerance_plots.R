@@ -36,6 +36,26 @@ outputs <- mutate(outputs, month=month(outputs$date))
 #create column for year
 outputs <- mutate(outputs, year=year(outputs$date))
 
+sept <- ggplot(outputs%>%
+                 filter(year==2023,month==9), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+  coord_flip()+
+  geom_point()+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
+  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
+  ylab("Critical Temperature")+
+  xlab("Species")+
+  ylim(30, 55)+
+  ggtitle("September 2023")+
+  theme_bw()+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+sept
+
 ##############################
 ###Individual Species Plots### 
 ##############################
@@ -280,22 +300,4 @@ july_var
 grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
 grid.arrange(July2022,July2023,ncol=2)
 
-sept <- ggplot(outputs%>%
-  filter(year==2023,month==9), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
-  coord_flip()+
-  geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
-  # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
-  ylab("Critical Temperature")+
-  xlab("Species")+
-  ylim(30, 55)+
-  ggtitle("September 2023")+
-  theme_bw()+
-  theme(legend.position="none")+
-  theme(panel.border = element_blank(),  
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black"))
-sept
+
