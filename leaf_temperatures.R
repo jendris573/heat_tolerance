@@ -18,7 +18,7 @@ library(gridGraphics)
 ### Data entry and preparation ###
 ##################################
 
-leaf_temps <- read_excel("~/Documents/College/02- R code/heating/leaf_temperatures.xlsx")
+leaf_temps <- read_excel("data/leaf_temperatures.xlsx")
 
 #create column for julian date
 leaf_temps$julian_date <- yday(leaf_temps$date)
@@ -29,10 +29,7 @@ mean_temps <- leaf_temps%>%
   dplyr::summarise(leaf_temp_mean= mean(temp))
 
 #Load NOAA Climate Data Online data
-climate <- read.csv("~/Documents/College/02- R code/heating/Tennessee_climate.csv")
-
-#keep only sewage plant
-climate <- climate%>%filter(NAME=="CLARKSVILLE SEWAGE PLANT, TN US")
+climate <- read.csv("data/Tennessee_climate.csv")
 
 #omit NA in temperature recordings 
 climate<-climate[complete.cases(climate[,8]),]
