@@ -21,7 +21,7 @@ library(stringr)
 ##################################
 
 #read in data
-heating_data<-read_excel("~/Documents/College/02- R code/heating/data/leaf_heating.xlsx")
+heating_data<-read_excel("data/leaf_heating.xlsx")
 
 #look at data structure
 str(heating_data)
@@ -66,7 +66,7 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
     cof=coef(lm(logit(FvFm)~Temperature)) 
     #Fit a non linear least squares model to the FvFm and Temperature data
     HT.model <- nls(FvFm ~ theta1/(1 + exp(-(theta2 + theta3*Temperature))),  start=list(theta1 = .8, theta2 = cof[1], theta3 = cof[2]),
-                    trace=F, control=list(maxiter=5000, tol=0.001))#had to relax the tolerance to get model convergence, original tolerance is 1e-3
+                    trace=F, control=list(maxiter=5000, tol=0.01))#had to relax the tolerance to get model convergence, original tolerance is 1e-3
     
     #Use the parameter estimates (coef(HT.model)[#])from the HT.model to predict a new fit based on a heat treatments from 23-62 degrees celcius. Here, # = 1:3.
     y<-coef(HT.model)[1]/(1+exp(-(coef(HT.model)[2]+coef(HT.model)[3]*seq(23,62)))) 
