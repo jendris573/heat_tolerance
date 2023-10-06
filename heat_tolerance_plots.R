@@ -45,7 +45,7 @@ sept <- ggplot(outputs%>%
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
   ylab("Critical Temperature")+
   xlab("Species")+
-  ylim(30, 55)+
+  ylim(20, 55)+
   ggtitle("September 2023")+
   theme_bw()+
   theme(legend.position="none")+
