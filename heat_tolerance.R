@@ -41,8 +41,8 @@ heating_data <- mutate(heating_data, Unique_ID = paste(date, location, id, sep =
 heating_data <- heating_data %>%
   filter(year > 2021)
 
-#heating_data <- heating_data %>%
-  #filter(location == "TN")
+heating_data <- heating_data %>%
+  filter(location == "TN")
 
 ###############################################
 ### Code to estimate temperature thresholds ###
@@ -188,24 +188,27 @@ temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, cont
 ### WAIT FOR CODE TO RUN!! ###
 
 ### WAIT FOR CODE TO RUN!! ###
+#write the outputs to a file so we don't have to rerun these scripts
+#write.xlsx2(temp,"data/boot_predictions.xlsx")
 n_ID <- length(unique(heating_data$Unique_ID))
-#create dataframe of true estimates - estimate from data - these values will represent the true difference
+#create dataframe of true estimates - estimate from data - these values will represent the true differences
 predtrue<-bind_rows(temp[1:n_ID])
-#create dataframe of critical value estimates from the bootstrap estimates - need these to calculate the p-value of our estimates
+write.xlsx2(predtrue,"data/boot_true_estimates.xlsx")
+#create dataframe of critical value estimates from the bootstrap estimates - need these to calculate the p-value of our estimates using the permutation test
 predboot<-bind_rows(temp[1:n_ID,4])
-
+write.xlsx2(predboot,"data/boot_1000.xlsx")
 # #Create a single dataframe of bootstrap estimates
 # n_ID <- length(unique(heating_data$Unique_ID))
 # pred<-bind_rows(temp[1:n_ID,2])
 # predtrue<-bind_rows(temp[1:n_ID])
 
 #Create a single dataframe of the critical value means and confidence intervals
-crits<-bind_rows(temp[1:n_ID,3])
+crits<-bind_rows(temp[1:n_ID,3])#this get's written later on
 
 ###############################################
 #Left off here###############################################
 ###############################################
-#Next need to take every bootstrap prediction value and subtract it from every other bootstrap prediction variable for each pair
+#Next need to take every bootstrap prediction value and run a permutation test for every pair
 #Then calculate how often the absolute value of that difference is greater than the true difference
 true<-predtrue[1,2]-predtrue[2,2] #true difference between the two, 1.481
 diff<-predboot[1:100,2]-predboot[101:200,2]#the difference between every bootstrapped run for Acer and Celtis
@@ -238,6 +241,6 @@ crits$id<-str_sub(crits$id, 15, )
 crits$date<-as.Date(crits$date)
 
 ######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
-write.xlsx(crits,"/Users/Joe/Documents/College/02- R code/heating/data/crit_values_final.xlsx",
+write.xlsx(crits,"data/crit_values_final.xlsx",
            col.names=TRUE, row.names=FALSE)
 
