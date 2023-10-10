@@ -17,10 +17,11 @@ heating_data<-read_excel("data/boot_1000.xlsx")
 
 #Step1: estimate true values
 #will focus on Tulpop and Ostvir in July 2022 as an example
-heating_data2<-heating_data[c(1601:1800),]
-
-test.stat.1<-abs(mean(heating_data2$tcrit[heating_data2$id=="2022-07-26.TN.Liriodendron tulipifera"])-
-                   mean(heating_data2$tcrit[heating_data2$id!="2022-07-26.TN.Liriodendron tulipifera"]))
+heating_data2<-heating_data[c(1201:1300,1701:1800),]
+quantile(heating_data2$tcrit[heating_data2$id=="2022-07-26.TN.Celtis laevigata"],c(0.025,0.5,0.975),na.rm=T)
+quantile(heating_data2$tcrit[heating_data2$id!="2022-07-26.TN.Celtis laevigata"],c(0.025,0.5,0.975),na.rm=T)
+test.stat.1<-abs(median(heating_data2$tcrit[heating_data2$id=="2022-07-26.TN.Celtis laevigata"])-
+                   median(heating_data2$tcrit[heating_data2$id!="2022-07-26.TN.Celtis laevigata"]))
 #true difference 4.2801
 test.stat.1
 
@@ -29,7 +30,7 @@ set.seed(1981)
 #the number of observations to sample
 n<-length(heating_data2$id)
 #number of permutation datasets
-P<-1000
+P<-10000
 #The variable to shuffle - shuffle the tcrit
 variable<-heating_data2$tcrit
 
@@ -48,12 +49,12 @@ PermSamples[,1:5]
 Perm.test.stat1<-rep(0,P)
 #loop through and calculate test stat
 for(i in 1:P){
-Perm.test.stat1[i]<-abs(mean(PermSamples[1:100,i])-
-                          mean(PermSamples[101:200,i]))
+Perm.test.stat1[i]<-abs(median(PermSamples[heating_data2$id=="2022-07-26.TN.Celtis laevigata",i])-
+                          median(PermSamples[heating_data2$id!="2022-07-26.TN.Celtis laevigata",i]))
 }
 max(Perm.test.stat1)#since not a single value was greater than the true difference, the p-value =0
 #May need to use the actual bootstrap estimates, not the mean of the bootstrap estimates
-
+mean(Perm.test.stat1>=test.stat.1)
 #try again with two species not that far apart in terms of values
 ###############################################
 ##################################################

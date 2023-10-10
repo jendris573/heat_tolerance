@@ -181,7 +181,7 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
 }#end of the function
 
 
-temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, control.temp=23, id=heating_data$Unique_ID, plot.est=F, boots=100)
+temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, control.temp=23, id=heating_data$Unique_ID, plot.est=F, boots=1000)
 
 ### WAIT FOR CODE TO RUN!! ###
 
@@ -196,6 +196,8 @@ predtrue<-bind_rows(temp[1:n_ID])
 write.xlsx2(predtrue,"data/boot_true_estimates.xlsx")
 #create dataframe of critical value estimates from the bootstrap estimates - need these to calculate the p-value of our estimates using the permutation test
 predboot<-bind_rows(temp[1:n_ID,4])
+quantile(predboot$tcrit[predboot$id=="2022-07-26.TN.Celtis laevigata"],c(0.025,0.5,0.975),na.rm=T)
+max(predboot$tcrit[predboot$id=="2022-07-26.TN.Celtis laevigata"])
 write.xlsx2(predboot,"data/boot_1000.xlsx")
 # #Create a single dataframe of bootstrap estimates
 # n_ID <- length(unique(heating_data$Unique_ID))
