@@ -1,5 +1,5 @@
-## R code to manipulate and plot cliamte data for my four field sites ##
-## aka another hot mess from Joe Endris ##
+## R code to manipulate and plot climate data for Tennessee ##
+## Written Joe Endris ##
 
 library(readr)
 library(dplyr)
@@ -7,13 +7,8 @@ library(tidyverse)
 library(ggplot2)
 library(lubridate)
 
-## create objects from datasets##
-setwd("~/Library/CloudStorage/GoogleDrive-jendris@my.apsu.edu/.shortcut-targets-by-id/1p5eHgH8eX9-QjkyyA3uRz5Lk7ontMZtO/Rehm lab - General/Trees/5- Climate/")
-
-#AL <- read_csv("Alabama.csv")
-#IN <- read_csv("Indiana.csv")
-#MI <- read_csv("Michigan.csv")
-TN <- read_csv("Tennessee.csv")
+#read in Tennessee climate data
+TN <- read_csv("data/Tennessee_climate.csv")
 
 ####################################
 ####Tennessee segment starts here###
@@ -24,7 +19,7 @@ str(TN)  #view structure of data ##
 ## create column for julian date##
 TN$julian_date <- yday(TN$DATE)
 
-#omit NA in temperature recordings 
+#omit NA in TMAX recordings 
 TN<-TN[complete.cases(TN[,9]),]
 
 ## monthly mean low temp ##
