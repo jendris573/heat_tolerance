@@ -207,26 +207,6 @@ write.xlsx2(predboot,"data/boot_1000.xlsx")
 #Create a single dataframe of the critical value means and confidence intervals
 crits<-bind_rows(temp[1:n_ID,3])#this get's written later on
 
-###############################################
-#Left off here###############################################
-###############################################
-#Next need to take every bootstrap prediction value and run a permutation test for every pair
-#Then calculate how often the absolute value of that difference is greater than the true difference
-true<-predtrue[1,2]-predtrue[2,2] #true difference between the two, 1.481
-diff<-predboot[1:100,2]-predboot[101:200,2]#the difference between every bootstrapped run for Acer and Celtis
-length(which(abs(diff)>true))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
-
-#Then calculate how often the absolute value of that difference is greater than the true difference
-true<-predtrue[1,2]-predtrue[4,2] #true difference between the two, 1.481
-diff<-predboot[1:100,2]-predboot[301:400,2]#the difference between every bootstrapped run for Acer and Juglans
-length(which(abs(diff)>true))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
-
-#Then calculate how often the absolute value of that difference is greater than the true difference
-true<-predtrue[4,2]-predtrue[16,2] #true difference between the two, 1.481
-diff<-predboot[301:400,2]-predboot[1501:1600,2]#the difference between every bootstrapped run for juglans v celtis
-length(which(abs(diff)>abs(true)))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
-
-
 #these are the critical values and need to be written to a file,
 #but need columns for plots added
 
