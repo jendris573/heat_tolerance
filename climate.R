@@ -128,9 +128,7 @@ sep2023_TMAX <- tenn_clim %>%
   filter(month==9) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
-########################################################
-### Absolute hottest day per month between 1980-2023 ###
-########################################################
 
-may_TMAX
+
+
 
