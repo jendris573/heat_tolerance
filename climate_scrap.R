@@ -44,7 +44,7 @@ TN_TMAX %>%
 #number of days above 32.2
 TN_32.2 <- TN %>%
   group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(n=sum(TMAX>32.2))
+  summarise(n=sum(TMAX>34.99))
 
 #plot number of days above 32.2
 TN_32.2 %>%
@@ -59,9 +59,10 @@ TN_32.2 %>%
        x= "Year") + theme_bw(base_size = 15)
 
 
-TN_32.2 %>%
-  filter(n>0)%>%
-  filter(year>1960)
+high_temp_mod <- lm(data=TN_32.2 %>%
+     filter(year>1979), n ~ year)
+
+summary(high_temp_mod)
 
 ##################################
 ####Alabama segment starts here###
