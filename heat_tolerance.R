@@ -41,8 +41,8 @@ heating_data <- mutate(heating_data, Unique_ID = paste(date, location, id, sep =
 heating_data <- heating_data %>%
   filter(year > 2021)
 
-#heating_data <- heating_data %>%
-  #filter(location == "TN")
+heating_data <- heating_data %>%
+  filter(location == "TN")
 
 ###############################################
 ### Code to estimate temperature thresholds ###
@@ -73,13 +73,30 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
     
     #Calculate half of the control Fv/Fm & a 95% reduction in FvFm with reference to control
     half=mean(na.omit(FvFm[which(Temperature==control.temp)]))/2  
-    nine5=mean(na.omit(FvFm[which(Temperature==control.temp)]))*0.05  
+    nine5=mean(na.omit(FvFm[which(Temperature==control.temp)]))*0.05
+    
+    #creates the true mean estimates when all data are included
+    nine5true=(-log((coef(HT.model)[1]/nine5)-1)-coef(HT.model)[2])/coef(HT.model)[3] 
+    fiftytrue=(-log((coef(HT.model)[[1]]/half)-1)-coef(HT.model)[[2]])/coef(HT.model)[[3]]  
+    
+    #special approach to estimating tcrit as this is 15% of the max slope
+    #Use model to predict changes in FvFm & make new dataframe
+    predicttrue=data.frame(x=seq(23,62,length.out=80),y=coef(HT.model)[1]/(1+exp(-(coef(HT.model)[2]+coef(HT.model)[3]*seq(23,62,length.out=80)))) ) #create a dataframe of predictions
+    df1true=cbind(predicttrue[-1,], predicttrue[-nrow(predicttrue),])[,c(3,1,4,2)]
+    #Use new dataframe to estimate the slope at between each 1-degree interval
+    df1true$slp=as.vector(apply(df1true, 1, function(x) summary(lm((x[3:4]) ~ x[1:2])) [[4]][[2]] ))
+    slp.at.tcrit=round(min(df1true$slp), 3)*.15 #Determine where slope is 15% of max slope & round
+    #Estimate the FvFm at which the slope is 15% of max slope & less than T50
+    fvfv.at.tcrit=df1true[which(abs(df1true[which(df1true[,1]<fiftytrue),]$slp-slp.at.tcrit)==min(abs(df1true[which(df1true[,1]<fiftytrue),]$slp-slp.at.tcrit))),][1,3]
+    #this is the value we ultimately want
+    Tcrittrue=(-log((coef(HT.model)[[1]]/fvfv.at.tcrit)-1)-coef(HT.model)[[2]])/coef(HT.model)[[3]] # Estimate the temperatureat which the slope is 15% of max slope
+    
     #95 Confidence Interval
-    predict.boot=matrix(NA,40, boots)
+    predict.boot=matrix(NA,40, boots)#the 40 represents the number of 1 degree intervals between the control and 62, 23-62
     T95=T50=Tcrit=c()
     for(k in 1:boots){
       #print(k)
-      srows <- sample(1:length(Temperature), length(Temperature),TRUE)
+      srows <- sample(1:length(Temperature), length(Temperature),replace=TRUE)#sample from 1:66 with replacement for each temperature
       
       if(class(try(nls(FvFm[srows] ~ theta1/(1 + exp(-(theta2 + theta3*Temperature[srows]))),  start=list(theta1 = .8, theta2 = cof[1], theta3 = cof[2]),
                        trace=F, control=list(maxiter=1000, tol=.001)), silent=T)[[1]])=="nlsModel")
@@ -141,7 +158,9 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
     }
     
     #plist<-c(plist,p.plot)
-    return(list(data.frame(id=(unique(id)),FvFm=y,
+    return(list(data.frame(id=(unique(id)),tcrittrue=Tcrittrue,
+               fiftytrue=fiftytrue, nine5true=nine5true),
+                data.frame(id=(unique(id)),FvFm=y,
                            FvFmlow=round(FvFm.boot[,1],5),
                            FvFmhigh=round(FvFm.boot[,2],5),predict=predict.boot),
                 data.frame(id=(unique(id)), 
@@ -153,27 +172,60 @@ psiiht=function(Temperature, FvFm, control.temp, id, plot.est, boots){
                            T50.uci=round(T50.ci[[2]],1),
                            T95.lci=round(T95.ci[[1]],1),
                            T95.mn=round(mean(na.omit(T95)),1),  
-                           T95.uci=round(T95.ci[[2]],1))))
+                           T95.uci=round(T95.ci[[2]],1)),
+               data.frame(id=unique(id),tcrit=Tcrit,
+                          T50=T50,T95=T95)))
     
   })))
   detach(l1)
 }#end of the function
 
 
-temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, control.temp=23, id=heating_data$Unique_ID, plot.est=T, boots=100)
+temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, control.temp=23, id=heating_data$Unique_ID, plot.est=F, boots=1000)
 
 ### WAIT FOR CODE TO RUN!! ###
 
 ### WAIT FOR CODE TO RUN!! ###
 
 ### WAIT FOR CODE TO RUN!! ###
-
-#Create a single dataframe of bootstrap estimates
+#write the outputs to a file so we don't have to rerun these scripts
+#write.xlsx2(temp,"data/boot_predictions.xlsx")
 n_ID <- length(unique(heating_data$Unique_ID))
-pred<-bind_rows(temp[1:n_ID])
+#create dataframe of true estimates - estimate from data - these values will represent the true differences
+predtrue<-bind_rows(temp[1:n_ID])
+write.xlsx2(predtrue,"data/boot_true_estimates.xlsx")
+#create dataframe of critical value estimates from the bootstrap estimates - need these to calculate the p-value of our estimates using the permutation test
+predboot<-bind_rows(temp[1:n_ID,4])
+quantile(predboot$tcrit[predboot$id=="2022-07-26.TN.Celtis laevigata"],c(0.025,0.5,0.975),na.rm=T)
+max(predboot$tcrit[predboot$id=="2022-07-26.TN.Celtis laevigata"])
+write.xlsx2(predboot,"data/boot_1000.xlsx")
+# #Create a single dataframe of bootstrap estimates
+# n_ID <- length(unique(heating_data$Unique_ID))
+# pred<-bind_rows(temp[1:n_ID,2])
+# predtrue<-bind_rows(temp[1:n_ID])
 
-#Create a single dataframe of the critical values
-crits<-bind_rows(temp[n_ID+1:length(temp)])
+#Create a single dataframe of the critical value means and confidence intervals
+crits<-bind_rows(temp[1:n_ID,3])#this get's written later on
+
+###############################################
+#Left off here###############################################
+###############################################
+#Next need to take every bootstrap prediction value and run a permutation test for every pair
+#Then calculate how often the absolute value of that difference is greater than the true difference
+true<-predtrue[1,2]-predtrue[2,2] #true difference between the two, 1.481
+diff<-predboot[1:100,2]-predboot[101:200,2]#the difference between every bootstrapped run for Acer and Celtis
+length(which(abs(diff)>true))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
+
+#Then calculate how often the absolute value of that difference is greater than the true difference
+true<-predtrue[1,2]-predtrue[4,2] #true difference between the two, 1.481
+diff<-predboot[1:100,2]-predboot[301:400,2]#the difference between every bootstrapped run for Acer and Juglans
+length(which(abs(diff)>true))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
+
+#Then calculate how often the absolute value of that difference is greater than the true difference
+true<-predtrue[4,2]-predtrue[16,2] #true difference between the two, 1.481
+diff<-predboot[301:400,2]-predboot[1501:1600,2]#the difference between every bootstrapped run for juglans v celtis
+length(which(abs(diff)>abs(true)))/100#number of occurrences greater than our test stat divided by total number of boots, this is the p-value
+
 
 #these are the critical values and need to be written to a file,
 #but need columns for plots added
@@ -191,6 +243,6 @@ crits$id<-str_sub(crits$id, 15, )
 crits$date<-as.Date(crits$date)
 
 ######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
-write.xlsx(crits,"/Users/Joe/Documents/College/02- R code/heating/data/crit_values_final.xlsx",
+write.xlsx(crits,"data/crit_values_final.xlsx",
            col.names=TRUE, row.names=FALSE)
 
