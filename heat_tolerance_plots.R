@@ -19,7 +19,7 @@ library(gridGraphics)
 ### Data entry and preparation ###
 ##################################
 
-outputs <- read_excel("~/Documents/College/02- R code/heating/data/crit_values.xlsx")
+outputs <- read_excel("data/crit_values_final.xlsx")
 
 #For Evan's readin
 #outputs <- read_excel("C:/R/heat_tolerance/crit_values_final.xlsx")
@@ -200,6 +200,9 @@ June2022 <- ggplot(outputs%>%
   coord_flip()+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  geom_hline(yintercept = 44.4, color= "red")+
+  geom_hline(yintercept = 42.8, color= "blue")+
+  geom_hline(yintercept = 38.3, color= "green")+
   # geom_point(x= outputs_species$T50.mn_mean, color = "blue")+
   # geom_point(x= outputs_species$T95.mn_mean, color = "black")+
   ylab("Critical Temperature")+
