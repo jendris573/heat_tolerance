@@ -56,6 +56,11 @@ record_TMAX <- tenn_clim %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
 #record high temp for June
+may_TMAX <- tenn_clim %>%
+  filter(month==5) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
+#record high temp for June
 june_TMAX <- tenn_clim %>%
   filter(month==6) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
@@ -70,10 +75,21 @@ aug_TMAX <- tenn_clim %>%
   filter(month==8) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
+#record high temp for September
+sep_TMAX <- tenn_clim %>%
+  filter(month==9) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
 #record high temp for June 2022
 june2022_TMAX <- tenn_clim %>%
   filter(year==2022) %>%
   filter(month==6) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
+#record high temp for May 2023
+may2023_TMAX <- tenn_clim %>%
+  filter(year==2023) %>%
+  filter(month==5) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
 #record high temp for June 2023
@@ -100,12 +116,19 @@ aug2023_TMAX <- tenn_clim %>%
   filter(month==8) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
+#record high temp for September 2022
+sep2022_TMAX <- tenn_clim %>%
+  filter(year==2022) %>%
+  filter(month==9) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
 #record high temp for September 2023
 sep2023_TMAX <- tenn_clim %>%
   filter(year==2023) %>%
   filter(month==9) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
-######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
-write.xlsx(crits,"data/high_temps.xlsx",
-           col.names=TRUE, row.names=FALSE)
+
+
+
+

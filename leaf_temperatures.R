@@ -49,52 +49,50 @@ BW <- leaf_temps %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-
-################################work past here ########################
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#SB leaf temp 
+SB <- leaf_temps %>%
+  filter(species== "Celtis laevigata") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#AB leaf temp 
+AB <- leaf_temps %>%
+  filter(species== "Fagus grandifolia") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#SG leaf temp 
+SG <- leaf_temps %>%
+  filter(species== "Liquidambar styraciflua") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#HHB leaf temp 
+HHB <- leaf_temps %>%
+  filter(species== "Ostrya virginiana") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#BC leaf temp 
+BC <- leaf_temps %>%
+  filter(species== "Prunus serotina") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#CO leaf temp 
+CO <- leaf_temps %>%
+  filter(species== "Quercus montana") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#SRO leaf temp 
+SRO <- leaf_temps %>%
+  filter(species== "Quercus falcata") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#SM leaf temp 
-SM <- leaf_temps %>%
-  filter(species== "Acer saccharum") %>%
+#AE leaf temp 
+AE <- leaf_temps %>%
+  filter(species== "Ulmus americana") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
