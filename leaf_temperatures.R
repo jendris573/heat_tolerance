@@ -1,14 +1,14 @@
 ###Leaf Temp  Plots###
 ###Code written by Joe Endris###
 
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(ggplot2)
 library(ggfortify)
 library(multcomp)
 library(multcompView)
 library(lubridate)
 library(readxl)
+library(writexl)
 library(gridExtra)
 library(MuMIn)
 library(reshape2)
@@ -23,41 +23,78 @@ leaf_temps <- read_excel("data/leaf_temperatures.xlsx")
 #create column for julian date
 leaf_temps$julian_date <- yday(leaf_temps$date)
 
-#determine mean leaf temp
-mean_temps <- leaf_temps%>%
-  group_by(species,date)%>%
-  dplyr::summarise(leaf_temp_mean= mean(temp))
+#################################################
+### Calculate Absolute High Leaf Temperatures ###
+#################################################
 
-#Load NOAA Climate Data Online data
-climate <- read.csv("data/Tennessee_climate.csv")
+#Determine absolute coldest day by year
+leaf_temps$date <- as.Date(leaf_temps$date)
+class(leaf_temps$date)
 
-#omit NA in temperature recordings 
-climate<-climate[complete.cases(climate[,8]),]
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-#create column for year
-climate <- mutate(climate, year=year(climate$DATE))
+#TP leaf temp 
+TP <- leaf_temps %>%
+  filter(species== "Liriodendron tulipifera") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-#create column for month
-climate <- mutate(climate, month=month(climate$DATE))
+#BW leaf temp 
+BW <- leaf_temps %>%
+  filter(species== "Juglans nigra") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-## create column for julian date##
-climate$julian_date <- yday(climate$DATE)
 
-#filter dates to study period
-climate <- filter(climate, DATE >= "2022-01-01")
+################################work past here ########################
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-#####################################################
-### Plot to compare highest leaf temp to air temp ###
-#####################################################
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-#Acer saccharum
-maple <- filter(mean_temps, species == 'Acer saccharum')
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-maple_plot <- ggplot(maple, aes(x=date, y=leaf_temp_mean))+
-  geom_point()+
-  geom_line(data=climate, aes(x=DATE, y=TMAX, color="grey"))+
-  xlab("Date")+
-  ylab("Temperature")+
-  theme_bw()
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
 
-maple_plot
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
+
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
+
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))
+
+#SM leaf temp 
+SM <- leaf_temps %>%
+  filter(species== "Acer saccharum") %>%
+  group_by(year) %>%
+  summarise(temp = max(temp, na.rm = TRUE))

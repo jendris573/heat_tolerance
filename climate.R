@@ -1,229 +1,111 @@
-## R code to manipulate and plot climate data for Tennessee ##
-## Written Joe Endris ##
+###Code to determine absolute highs 
+###written by Joe Endris
 
-library(readr)
-library(dplyr)
-library(tidyverse)
-library(ggplot2)
+## unless stated, all dates are since 1900
+
+library(readxl)
+library(writexl)
+library(fitdistrplus)
 library(lubridate)
+library(MuMIn)
+library(tidyverse)
+library(pracma)
+library(multcomp)
+library(ggplot2)
 
-#read in Tennessee climate data
-TN <- read_csv("data/Tennessee_climate.csv")
+########################
+### Data Preparation ###
+########################
 
-####################################
-####Tennessee segment starts here###
-####################################
+#Load NOAA Climate Data Online data
+tenn_clim<-read.csv("data/Tennessee_climate.csv")
 
-str(TN)  #view structure of data ##
+#keep only sewage plant
+tenn_clim <- tenn_clim%>%filter(STATION=="USC00401790")
+
+#create column for year
+tenn_clim <- mutate(tenn_clim, year=year(tenn_clim$DATE))
+
+#create column for month
+tenn_clim <- mutate(tenn_clim, month=month(tenn_clim$DATE))
 
 ## create column for julian date##
-TN$julian_date <- yday(TN$DATE)
+tenn_clim$julian_date <- yday(tenn_clim$DATE)
 
+#omit NA in precipitation recordings 
+tenn_clim<-tenn_clim[complete.cases(tenn_clim[,6]),]
 #omit NA in TMAX recordings 
-TN<-TN[complete.cases(TN[,9]),]
+tenn_clim<-tenn_clim[complete.cases(tenn_clim[,9]),]
+#omit NA in TMIN recordings 
+tenn_clim<-tenn_clim[complete.cases(tenn_clim[,10]),]
 
-## monthly mean low temp ##
-## update this after creating julian dates ##
-TN_TMAX <- TN %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(total = max(TMAX))
+#filter for 1980-present
+tenn1980 <- tenn_clim %>%
+  filter(year>1979)
 
-## create graph for temps by month of year ##
+############################################
+### Calculate Absolute High Temperatures ###
+############################################
 
-TN_TMAX %>%
-  filter(year>1980) %>%
-  ggplot(aes(x = year, y = total)) +
-  geom_point(color = "grey") +
-  geom_smooth(stat="smooth",method="lm")+
-  labs(title = "Annual Highest Temperatures (°C)",
-       subtitle = "Clarksville, TN",
-       y= "Temperature °C",
-       x= "Year") + theme_bw(base_size = 15)
+#Determine absolute coldest day by year
+tenn_clim$DATE <- as.Date(tenn_clim$DATE)
+class(tenn_clim$DATE)
 
+#record high temperature since 1900
+record_TMAX <- tenn_clim %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-#number of days above 32.2
-TN_32.2 <- TN %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(n=sum(TMAX>32.2))
+#record high temp for June
+june_TMAX <- tenn_clim %>%
+  filter(month==6) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-#plot number of days above 32.2
-TN_32.2 %>%
-  filter(as.integer(year)>1980)%>%
-  filter(n>0)%>%
-  ggplot(aes(x = year, y = n)) +
-  geom_point(color = "grey") +
-  geom_smooth(method="lm")+
-  labs(title = "Number of Days Above 32°C",
-       subtitle = "Clarksville, TN",
-       y= "Number of Days",
-       x= "Year") + theme_bw(base_size = 15)
+#record high temp for July
+july_TMAX <- tenn_clim %>%
+  filter(month==7) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
+#record high temp for August
+aug_TMAX <- tenn_clim %>%
+  filter(month==8) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-TN_32.2 %>%
-  filter(n>0)%>%
-  filter(year>1960)
+#record high temp for June 2022
+june2022_TMAX <- tenn_clim %>%
+  filter(year==2022) %>%
+  filter(month==6) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-##################################
-####Alabama segment starts here###
-##################################
+#record high temp for June 2023
+june2023_TMAX <- tenn_clim %>%
+  filter(year==2023) %>%
+  filter(month==6) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-str(AL)  #view structure of data ##
+#record high temp for July 2022
+july2022_TMAX <- tenn_clim %>%
+  filter(year==2022) %>%
+  filter(month==7) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-## create column for julian date##
-## trying to replicate https://stackoverflow.com/questions/21414847/convert-a-date-vector-into-julian-day-in-r##
-AL <- mutate(AL, Julian=format(DATE,"%j"))
+#record high temp for July 2023
+july2023_TMAX <- tenn_clim %>%
+  filter(year==2023) %>%
+  filter(month==7) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-#omit NA in temperature recordings 
-AL<-AL[complete.cases(AL[,4]),]
+#record high temp for August 2023
+aug2023_TMAX <- tenn_clim %>%
+  filter(year==2023) %>%
+  filter(month==8) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-## monthly mean low temp ##
-## update this after creating julian dates ##
-AL_TMAX <- AL %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(total = max(TMAX))
+#record high temp for September 2023
+sep2023_TMAX <- tenn_clim %>%
+  filter(year==2023) %>%
+  filter(month==9) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
 
-###max temp by month May-Sep##
-AL_monthly_TMAX <- AL %>%
-
-
-## create graph for temps by month of year ##
-  
-  AL_TMAX %>%
-  filter(year>1950) %>%
-  ggplot(aes(x = year, y = total)) +
-  geom_point(color = "grey") +
-  geom_smooth(stat="smooth",method="lm")+
-  labs(title = "Annual Highest Temperatures (°C)",
-       subtitle = "Tuscaloosa, AL",
-       y= "Temperature °C",
-       x= "Year") + theme_bw(base_size = 15)
-
-#number of days above 32.2
-AL_32.2 <- AL %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(n=sum(TMAX>32.2))
-
-#plot number of days above 32.2
-AL_32.2 %>%
-  filter(as.integer(year)>1950)%>%
-  filter(n>0)%>%
-  ggplot(aes(x = year, y = n)) +
-  geom_point(color = "grey") +
-  geom_smooth(method="lm")+
-  labs(title = "Number of Days >32.2 (°C)",
-       subtitle = "Tuscaloosa, AL",
-       y= "Number of Days",
-       x= "Year") + theme_bw(base_size = 15)
-
-
-AL_32.2 %>%
-  filter(n>0)%>%
-  filter(year>1960)
-
-##################################
-####Indiana segment starts here###
-##################################
-
-str(IN)  #view structure of data ##
-
-## create column for julian date##
-## trying to replicate https://stackoverflow.com/questions/21414847/convert-a-date-vector-into-julian-day-in-r##
-IN <- mutate(IN, Julian=format(DATE,"%j"))
-
-#omit NA in temperature recordings 
-IN<-IN[complete.cases(IN[,4]),]
-
-## monthly mean low temp ##
-## update this after creating julian dates ##
-IN_TMAX <- IN %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(total = max(TMAX))
-
-## create graph for temps by month of year ##
-
-IN_TMAX %>%
-  filter(year>1980) %>%
-  ggplot(aes(x = year, y = total)) +
-  geom_point(color = "grey") +
-  geom_smooth(stat="smooth",method="lm")+
-  labs(title = "Annual Highest Temperatures (°C)",
-       subtitle = "Hoosier National Forest, IN",
-       y= "Temperature °C",
-       x= "Year") + theme_bw(base_size = 15)
-
-
-#number of days above 32.2
-IN_32.2 <- IN %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(n=sum(TMAX>32.2))
-
-#plot number of days above 32.2
-IN_32.2 %>%
-  filter(as.integer(year)>1980)%>%
-  filter(n>0)%>%
-  ggplot(aes(x = year, y = n)) +
-  geom_point(color = "grey") +
-  geom_smooth(method="lm")+
-  labs(title = "Number of Days >32.2 (°C)",
-       subtitle = "Hoosier National Forest, IN",
-       y= "Number of Days",
-       x= "Year") + theme_bw(base_size = 15)
-
-
-IN_32.2 %>%
-  filter(n>0)%>%
-  filter(year>1960)
-
-##################################
-####Michigan segment starts here###
-##################################
-
-str(MI)  #view structure of data ##
-
-## create column for julian date##
-## trying to replicate https://stackoverflow.com/questions/21414847/convert-a-date-vector-into-julian-day-in-r##
-MI <- mutate(MI, Julian=format(DATE,"%j"))
-
-#omit NA in temperature recordings 
-MI<-MI[complete.cases(MI[,4]),]
-
-## monthly mean low temp ##
-## update this after creating julian dates ##
-MI_TMAX <- MI %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(total = max(TMAX))
-
-## create graph for temps by month of year ##
-
-MI_TMAX %>%
-  filter(year>1980) %>%
-  ggplot(aes(x = year, y = total)) +
-  geom_point(color = "grey") +
-  geom_smooth(stat="smooth",method="lm")+
-  labs(title = "Annual Highest Temperatures (°C)",
-       subtitle = "Chelsea, MI",
-       y= "Temperature °C",
-       x= "Year") + theme_bw(base_size = 15)
-
-
-#number of days above 32.2
-MI_32.2 <- MI %>%
-  group_by(year=lubridate::floor_date(DATE, "year")) %>%
-  summarise(n=sum(TMAX>32.2))
-
-#plot number of days above 32.2
-MI_32.2 %>%
-  filter(as.integer(year)>1980)%>%
-  filter(n>0)%>%
-  ggplot(aes(x = year, y = n)) +
-  geom_point(color = "grey") +
-  geom_smooth(method="lm")+
-  labs(title = "Number of Days >32.2 (°C)",
-       subtitle = "Chelsea, MI",
-       y= "Number of Days",
-       x= "Year") + theme_bw(base_size = 15)
-
-
-MI_32.2 %>%
-  filter(n>0)%>%
-  filter(year>1960)
+######NOTE: MAKE SURE YOU CHANGE THE FILE NAME SO YOU DON'T OVERWRITE A PREEXISTING FILE##############
+write.xlsx(crits,"data/high_temps.xlsx",
+           col.names=TRUE, row.names=FALSE)
