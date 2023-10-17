@@ -186,3 +186,60 @@ ggplot(data=test,aes(x=groupn,y=tcrit))+
   geom_boxplot()+
   facet_wrap(~id)+
   scale_x_discrete(name="Sampling Period",labels=c("June 2022","July 2022","June 2023","July 2023"))
+#################################
+##repeating for T50
+#################################
+#full model with all species for june and july 2022 and 2023
+#start with just comparing a single species across years
+test<-heating_data%>%
+  filter(month>5&month<9)%>%
+  filter(!is.na(T50))
+
+#create a grouping variable for year and month for plotting below
+test$groupn<-paste(test$year,test$month,sep="_")
+#full model using all species as random effects and motnh+year as a fixed effect
+#This is the final model we will report in the paper, dropping the interaction term of month*year because
+#it is difficult to interpret and not really needed
+mod<-lme(T50~as.factor(year)+as.factor(month),random=~1|id,data=test)
+anova(mod)
+summary(mod)#slightly different pattern than above for celtis
+#tcrit decreases with year meaning tcrits in 2023 are lower than 2022
+#but tcrit gets higher with month so july values are higher than june values
+#the p-values = 0 because lme cuts of significance at p = <2e-16. This means p-values in our model
+#are even smaller than that!
+
+#will need to make a better figure to show these data.
+#the labels on the x-axis would need changed
+ggplot(data=test,aes(x=groupn,y=T50))+
+  geom_boxplot()+
+  facet_wrap(~id)+
+  scale_x_discrete(name="Sampling Period",labels=c("June 2022","July 2022","June 2023","July 2023"))
+
+#################################
+#T95
+#################################
+#full model with all species for june and july 2022 and 2023
+#start with just comparing a single species across years
+test<-heating_data%>%
+  filter(month>5&month<9)%>%
+  filter(!is.na(T95))
+
+#create a grouping variable for year and month for plotting below
+test$groupn<-paste(test$year,test$month,sep="_")
+#full model using all species as random effects and motnh+year as a fixed effect
+#This is the final model we will report in the paper, dropping the interaction term of month*year because
+#it is difficult to interpret and not really needed
+mod<-lme(T95~as.factor(year)+as.factor(month),random=~1|id,data=test)
+anova(mod)
+summary(mod)#slightly different pattern than above for celtis
+#tcrit decreases with year meaning tcrits in 2023 are lower than 2022
+#but tcrit gets higher with month so july values are higher than june values
+#the p-values = 0 because lme cuts of significance at p = <2e-16. This means p-values in our model
+#are even smaller than that!
+
+#will need to make a better figure to show these data.
+#the labels on the x-axis would need changed
+ggplot(data=test,aes(x=groupn,y=T95))+
+  geom_boxplot()+
+  facet_wrap(~id)+
+  scale_x_discrete(name="Sampling Period",labels=c("June 2022","July 2022","June 2023","July 2023"))
