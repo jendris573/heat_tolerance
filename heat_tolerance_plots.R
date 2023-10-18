@@ -133,8 +133,9 @@ July2023
 
 
 
+grid.arrange(June2022,July2022, June2023,July2023,ncol=2)
+#or
 grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
-grid.arrange(July2022,July2023,ncol=2)
 
 
 
