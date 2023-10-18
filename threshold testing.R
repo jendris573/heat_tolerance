@@ -71,7 +71,7 @@ aug2023TMAX <- 37.8
 #absolute highest temp recorded in September 2023
 sep2023TMAX <- 33.9
 
-species <- c("Acer saccharum", "Celtis laevigata", "Fagus grandifolia", "Juglans nigra", "Liquidambar styraciflua", "Liriodendron tulipifera", "Ostrya virginiana", "Prunus serotina", "Quercus falcata", "Quercus montana", "Ulmus americana")
+species <- c("Acer saccharum", "Celtis laevigata", "Fagus grandifolia", "Juglans nigra", "Liquidambar styraciflua", "Liriodendron tulipifera", "Ostrya virginiana", "Prunus serotina", "Quercus falcata", "Quercus montana", "Ulmus rubra")
 leaf2022 <- c(38.8, 38.9, 45.3, 37.6, 36.5, 44.5, 40.6, 40.2, 45.7, 41.9, 45.9)
 leaf2023 <- c(43.5, 38.7, 41.0, 40.8, 38.7, 44.8, 40.7, 39.5, 43.5, 45.3, 42.1)
 

@@ -91,8 +91,8 @@ SRO <- leaf_temps %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))
 
-#AE leaf temp 
-AE <- leaf_temps %>%
-  filter(species== "Ulmus americana") %>%
+#SE leaf temp 
+SE <- leaf_temps %>%
+  filter(species== "Ulmus rubra") %>%
   group_by(year) %>%
   summarise(temp = max(temp, na.rm = TRUE))

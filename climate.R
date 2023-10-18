@@ -47,7 +47,7 @@ tenn1980 <- tenn_clim %>%
 ### Calculate Absolute High Temperatures ###
 ############################################
 
-#Determine absolute coldest day by year
+#Determine absolute hottest day by year
 tenn_clim$DATE <- as.Date(tenn_clim$DATE)
 class(tenn_clim$DATE)
 
@@ -55,7 +55,7 @@ class(tenn_clim$DATE)
 record_TMAX <- tenn_clim %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
-#record high temp for June
+#record high temp for May
 may_TMAX <- tenn_clim %>%
   filter(month==5) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
@@ -128,6 +128,74 @@ sep2023_TMAX <- tenn_clim %>%
   filter(month==9) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
+################################
+### Climate Plots start here ###
+################################
+
+## Plot for absolute high by year ##
+
+#determine hottest day by year
+TN_TMAX <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(abs_TMAX = max(TMAX))
+
+
+
+#create plot for record high by year
+record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
+  geom_smooth(method = "lm")+
+  geom_point()+
+  labs(title = "Annual Highest Temperatures (°C) since 1980",
+       subtitle = "Clarksville, TN",
+       y= "Temperature °C",
+       x= "Year")+
+  theme_bw()+
+  theme(panel.border = element_blank(), 
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background  = element_blank(),
+      axis.line = element_line(colour = "black"),
+      axis.title.x = element_blank(),
+      axis.text.x=element_text(angle = 45, hjust = 1))
+
+record_TMAX_plot
+
+#number of days above 35C
+days_35 <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(number=sum(TMAX>34.99))
+
+#plot number of days above 35C
+days_35_plot <- ggplot(days_35, aes(x=year, y=number ))+
+  geom_point() +
+  geom_smooth(stat="smooth",method="lm")+
+  theme_bw()+
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"),
+        axis.title.x = element_blank(),
+        axis.text.x=element_text(angle = 45, hjust = 1))+
+  labs(title = "Number of Days Above 35°C",
+       subtitle = "Clarksville, TN",
+       y= "Number of Days",
+       x= "Year")
+
+days_35_plot
+
+
+
+
+
+##################################
+### Climate statistical models ###
+##################################
+
+high_temp_mod <- lm(data=TN_32.2 %>%
+                      filter(year>1979), n ~ year)
+
+summary(high_temp_mod)
 
 
 

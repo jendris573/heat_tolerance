@@ -5,3 +5,9 @@
 
 #Raw data folder with outputs from fluorometer
 heating_raw_data/
+
+#excess code/sandbox scripts
+excess_code/
+
+#huge dataset for farm weather
+data/farm_weather_data.xlsx
