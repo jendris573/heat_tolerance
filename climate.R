@@ -160,7 +160,7 @@ record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
 
 record_TMAX_plot
 
-#number of days above 35C
+#number of days above 35C (95F)
 days_35 <- tenn1980 %>%
   group_by(year) %>%
   summarise(number=sum(TMAX>34.99))
@@ -185,7 +185,29 @@ days_35_plot <- ggplot(days_35, aes(x=year, y=number ))+
 days_35_plot
 
 
+#number of days above 32.2C (90F)
+days_32 <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(number=sum(TMAX>32.19))
 
+#plot number of days above 32.2C
+days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
+  geom_point() +
+  geom_smooth(stat="smooth",method="lm")+
+  theme_bw()+
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"),
+        axis.title.x = element_blank(),
+        axis.text.x=element_text(angle = 45, hjust = 1))+
+  labs(title = "Number of Days Above 32.2°C",
+       subtitle = "Clarksville, TN",
+       y= "Number of Days",
+       x= "Year")
+
+days_32_plot
 
 
 ##################################

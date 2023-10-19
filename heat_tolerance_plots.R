@@ -6,6 +6,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(ggfortify)
+library(ggimage)
 library(multcomp)
 library(multcompView)
 library(lubridate)
@@ -44,9 +45,10 @@ outputs <- mutate(outputs, year=year(outputs$date))
 
 #June 2022
 June2022 <- ggplot(outputs%>%
-                      filter(year==2022,month==6), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = FALSE))) +
+                      filter(year==2022,month==6), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
   geom_point()+
+  scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
   geom_point(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
