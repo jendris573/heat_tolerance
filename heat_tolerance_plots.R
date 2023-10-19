@@ -39,6 +39,10 @@ outputs <- mutate(outputs, year=year(outputs$date))
 #outputs$id<- factor(outputs$id, levels = c(sort(unique(outputs$id), decreasing = FALSE)))
 #outputs_ordered <- within(outputs, id <- factor(id, levels=names(sort(table(id), decreasing=TRUE))))
 
+#add column for image location - needed for plotting leaf image
+leaf_max_temp$location<-'leaf_image2.jpg'#change this filename to whatever .jpg or .png - can only use jpg or png
+#If using a different .jpg, make sure the file size is really small (<10 KB). Otherwise the plotting
+#takes forever and you end up with a huge file size for the ggplot. Not sure why it does this.
 ###################################
 ### Plots for each sample period###
 ###################################
@@ -47,10 +51,12 @@ outputs <- mutate(outputs, year=year(outputs$date))
 June2022 <- ggplot(outputs%>%
                       filter(year==2022,month==6), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
+  #geom_image has to come first so it is drawn behind everything else, that way if white space is in image,
+  #it doesn't show up
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   scale_x_discrete(limit=rev)+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  geom_point(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
   geom_hline(yintercept = 42.8, color= "orange")+ #record june high temp
   geom_hline(yintercept = 38.3, color= "blue")+ #highest temp June 2022
@@ -70,9 +76,10 @@ June2022
 July2022 <- ggplot(outputs%>%
                      filter(year==2022,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
   coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  geom_point(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  #geom_point(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
   geom_hline(yintercept = 43.3, color= "orange")+ #record July high temp
   geom_hline(yintercept = 38.9, color= "blue")+ #highest temp July 2022
@@ -92,9 +99,10 @@ July2022
 June2023 <- ggplot(outputs%>%
                      filter(year==2023,month==6), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
   coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  #geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
   geom_hline(yintercept = 42.8, color= "orange")+ #record June high temp
   geom_hline(yintercept = 38.3, color= "blue")+ #highest temp June 2023
@@ -114,9 +122,10 @@ June2023
 July2023 <- ggplot(outputs%>%
                      filter(year==2023,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
   coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
+  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  #geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
   geom_hline(yintercept = 43.3, color= "orange")+ #record July high temp
   geom_hline(yintercept = 37.2, color= "blue")+ #highest temp July 2023
