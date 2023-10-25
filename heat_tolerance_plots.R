@@ -36,13 +36,12 @@ outputs <- mutate(outputs, month=month(outputs$date))
 #create column for year
 outputs <- mutate(outputs, year=year(outputs$date))
 
-#outputs$id<- factor(outputs$id, levels = c(sort(unique(outputs$id), decreasing = FALSE)))
-#outputs_ordered <- within(outputs, id <- factor(id, levels=names(sort(table(id), decreasing=TRUE))))
-
 #add column for image location - needed for plotting leaf image
 leaf_max_temp$location<-'leaf_image2.jpg'#change this filename to whatever .jpg or .png - can only use jpg or png
 #If using a different .jpg, make sure the file size is really small (<10 KB). Otherwise the plotting
 #takes forever and you end up with a huge file size for the ggplot. Not sure why it does this.
+
+
 ###################################
 ### Plots for each sample period###
 ###################################
@@ -58,31 +57,33 @@ June2022 <- ggplot(outputs%>%
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
-  geom_hline(yintercept = 42.8, color= "orange")+ #record june high temp
-  geom_hline(yintercept = 38.3, color= "blue")+ #highest temp June 2022
+  geom_hline(yintercept = 42.8, linetype = 2, color= "orange")+ #record june high temp
+  geom_hline(yintercept = 38.3, linetype = 3, color= "blue")+ #highest temp June 2022
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
   ggtitle("June 2022")+
-  theme_bw()+
-  theme(legend.position="none")+
   theme(panel.border = element_blank(),  
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        axis.line = element_line(colour = "black"))
+        axis.line = element_line(colour = "black"),
+        legend.background = element_blank(),
+        legend.box.background = element_blank(),
+        legend.spacing.y = unit(0, "cm"),
+        legend.position=c("RIGHT"))
 June2022
 
 July2022 <- ggplot(outputs%>%
-                     filter(year==2022,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+                     filter(year==2022,month==7), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
   geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
+  scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  #geom_point(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
-  geom_hline(yintercept = 43.3, color= "orange")+ #record July high temp
-  geom_hline(yintercept = 38.9, color= "blue")+ #highest temp July 2022
+  geom_hline(yintercept = 43.3, linetype = 2, color= "orange")+ #record July high temp
+  geom_hline(yintercept = 38.9, linetype = 3, color= "blue")+ #highest temp July 2022
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -97,15 +98,15 @@ July2022 <- ggplot(outputs%>%
 July2022
 
 June2023 <- ggplot(outputs%>%
-                     filter(year==2023,month==6), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+                     filter(year==2023,month==6), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
   geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
+  scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  #geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
-  geom_hline(yintercept = 42.8, color= "orange")+ #record June high temp
-  geom_hline(yintercept = 38.3, color= "blue")+ #highest temp June 2023
+  geom_hline(yintercept = 42.8, linetype = 2, color= "orange")+ #record June high temp
+  geom_hline(yintercept = 38.3, linetype = 3, color= "blue")+ #highest temp June 2023
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -120,15 +121,15 @@ June2023 <- ggplot(outputs%>%
 June2023
 
 July2023 <- ggplot(outputs%>%
-                     filter(year==2023,month==7), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+                     filter(year==2023,month==7), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
   geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  #geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
+  scale_x_discrete(limit=rev)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
-  geom_hline(yintercept = 43.3, color= "orange")+ #record July high temp
-  geom_hline(yintercept = 37.2, color= "blue")+ #highest temp July 2023
+  geom_hline(yintercept = 43.3, linetype = 2, color= "orange")+ #record July high temp
+  geom_hline(yintercept = 37.2, linetype = 3, color= "blue")+ #highest temp July 2023
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -151,14 +152,15 @@ grid.arrange(June2022,June2023,July2022,July2023,ncol=2)
 
 
 sept23 <- ggplot(outputs%>%
-                   filter(year==2023,month==9), aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasing = TRUE))) +
+                   filter(year==2023,month==9), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
+  scale_x_discrete(limit=rev)+
   geom_point(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species), shape = 8, size=4)+
   geom_hline(yintercept = 44.4, color= "red")+ #record high temp
-  geom_hline(yintercept = 44.4, color= "orange")+ #record Sept high temp
-  geom_hline(yintercept = 33.9, color= "blue")+ #highest temp Sept 2023
+  geom_hline(yintercept = 44.4, linetype = 2, color= "orange")+ #record Sept high temp
+  geom_hline(yintercept = 33.9, linetype = 3, color= "blue")+ #highest temp Sept 2023
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(20, 55)+
@@ -180,7 +182,7 @@ outputs$year <- as.factor(outputs$year)
 june_variation <- outputs %>%
   filter(month==6)
 
-june_var <- ggplot(july_variation, aes(y= Tcrit.mn, x= id, color=year)) +
+june_var <- ggplot(june_variation, aes(y= Tcrit.mn, x= id, color=year)) +
   coord_flip()+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
@@ -189,7 +191,7 @@ june_var <- ggplot(july_variation, aes(y= Tcrit.mn, x= id, color=year)) +
   ylim(30, 55)+
   ggtitle("June")+
   theme_bw()+
-  #theme(legend.position="none")+
+  theme(legend.position="none")+
   theme(panel.border = element_blank(),  
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -293,34 +295,4 @@ full_plot <- ggplot(outputs, aes(y= Tcrit.mn, x= reorder(id, Tcrit.mn, decreasin
 #changing LT values. Therefore it is probably necessary to make a figure for each sample period
 full_plot
 
-########################################
-### 2022 vs 2023 comparison by month ###
-########################################
 
-###june to june comparison
-
-june <- filter(outputs, month == 6)
-class(outputs$month)
-
-june_plot <- ggplot(june, aes(x=year, y=Tcrit.mn))+
-  geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  xlab("Year")+
-  ylab("Critical Temperature")+
-  theme_bw()+
-  facet_wrap(~id)
-
-june_plot
-
-july <- filter(outputs, month == 7)
-class(outputs$month)
-
-july_plot <- ggplot(june, aes(x=year, y=Tcrit.mn))+
-  geom_point()+
-  geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci))+
-  xlab("Year")+
-  ylab("Critical Temperature")+
-  theme_bw()+
-  facet_wrap(~id)
-
-july_plot
