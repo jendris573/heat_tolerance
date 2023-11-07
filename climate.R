@@ -20,9 +20,6 @@ library(ggplot2)
 #Load NOAA Climate Data Online data
 tenn_clim<-read.csv("data/Tennessee_climate.csv")
 
-#keep only sewage plant
-tenn_clim <- tenn_clim%>%filter(STATION=="USC00401790")
-
 #create column for year
 tenn_clim <- mutate(tenn_clim, year=year(tenn_clim$DATE))
 
@@ -128,6 +125,33 @@ sep2023_TMAX <- tenn_clim %>%
   filter(month==9) %>%
   summarise(temp = max(TMAX, na.rm = TRUE))
 
+#record high temp for 2023
+tmax2023 <- tenn_clim %>%
+  filter(year==2023) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
+#record high temp for 2022
+tmax2022 <- tenn_clim %>%
+  filter(year==2022) %>%
+  summarise(temp = max(TMAX, na.rm = TRUE))
+
+#Mean precip since 1980
+annual_precip <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(rain = sum(PRCP, na.rm = TRUE))
+
+mean_precip <- mean(annual_precip$rain)
+
+#mean precip in 2022
+precip_2022 <- tenn1980 %>%
+  filter(year==2022) %>%
+  summarise(rain = sum(PRCP, na.rm = TRUE))
+
+#mean precip in 2023
+precip_2023 <- tenn1980 %>%
+  filter(year==2023) %>%
+  summarise(rain = sum(PRCP, na.rm = TRUE))
+
 ################################
 ### Climate Plots start here ###
 ################################
@@ -209,16 +233,72 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
 
 days_32_plot
 
+days_32_mod <- glm(number ~ year, data=days_32)
+summary(days_32_mod)
 
 ##################################
 ### Climate statistical models ###
 ##################################
 
-high_temp_mod <- lm(data=TN_32.2 %>%
-                      filter(year>1979), n ~ year)
+heat_season <- tenn1980 %>%
+  filter(julian_date>120) %>%
+  filter(julian_date<275)
+
+heat_season_mod <- lm(TMAX ~ year, data=heat_season)
 
 summary(high_temp_mod)
 
+#filter 1980 data for may only
+may_mean_tmax <- tenn1980 %>%
+  group_by(julian_date, year) %>%
+  filter(julian_date>120) %>%
+  filter(julian_date<152) %>%
+  dplyr::summarise(temp=mean(TMAX))
 
+may_model <- glm(temp ~ julian_date + year, data = may_mean_tmax, na.action="na.fail")
+summary(may_model)
+
+#filter 1980 data for June only
+june_mean_tmax <- tenn1980 %>%
+  group_by(julian_date, year) %>%
+  filter(julian_date>151) %>%
+  filter(julian_date<182) %>%
+  dplyr::summarise(temp=mean(TMAX))
+
+june_model <- glm(temp ~ julian_date + year, data = june_mean_tmax, na.action="na.fail")
+summary(june_model)
+
+#filter 1980 data for July only
+july_mean_tmax <- tenn1980 %>%
+  group_by(julian_date, year) %>%
+  filter(julian_date>181) %>%
+  filter(julian_date<213) %>%
+  dplyr::summarise(temp=mean(TMAX))
+
+july_model <- glm(temp ~ julian_date + year, data = july_mean_tmax, na.action="na.fail")
+summary(july_model)
+
+#filter 1980 data for August only
+aug_mean_tmax <- tenn1980 %>%
+  group_by(julian_date, year) %>%
+  filter(julian_date>212) %>%
+  filter(julian_date<244) %>%
+  dplyr::summarise(temp=mean(TMAX))
+
+aug_model <- glm(temp ~ julian_date + year, data = aug_mean_tmax, na.action="na.fail")
+summary(aug_model)
+
+#filter 1980 data for Sept only
+sept_mean_tmax <- tenn1980 %>%
+  group_by(julian_date, year) %>%
+  filter(julian_date>243) %>%
+  filter(julian_date<274) %>%
+  dplyr::summarise(temp=mean(TMAX))
+
+sept_model <- glm(temp ~ julian_date + year, data = sept_mean_tmax, na.action="na.fail")
+summary(sept_model)
+
+annual_model <- glm(TMAX ~ julian_date + year, data = tenn1980 )
+summary(annual_model)
 
 

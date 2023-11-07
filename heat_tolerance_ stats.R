@@ -12,12 +12,13 @@ library(xlsx)
 library(gridExtra)
 library(car)
 library(stringr)
+library(MuMIn)
 
 ##################################
 ### Data entry and preparation ###
 ##################################
 
-outputs <- read_excel("~/Documents/College/01- Data/crit_values_June 2023.xlsx")
+outputs <- read_excel("data/crit_values_final.xlsx")
 
 #create column for julian date
 outputs$julian_date <- yday(outputs$date)
@@ -28,18 +29,35 @@ outputs <- mutate(outputs, month=month(outputs$date))
 #create column for year
 outputs <- mutate(outputs, year=year(outputs$date))
 
+#rename id as species
+colnames(outputs)[1] = "species"
+
 #######################
 ###Statistical Tests###
 #######################
 
-june_mod1 <- glm(Tcrit.mn ~ year, data=june)
+#global models
 
-summary(june_mod1)
+tcrit_global_mod <- glm(Tcrit.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
+dredge(tcrit_global_mod)
 
-outputs$id <- as.factor(outputs$id)
 
-june_mod2 <- glm(Tcrit.mn ~ id , data = outputs)
-summary(june_mod2)
+t50_global_mod <- glm(T50.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
+dredge(t50_global_mod)
 
-glht(june_mod2, mcp(id = "Tukey"))
-summary(glht(june_mod2, mcp(id = "Tukey")))
+t95_global_mod <- glm(T95.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
+dredge(t95_global_mod)
+
+#best models
+tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
+summary(tcrit_mod)
+
+t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
+summary(t50_mod)
+
+t95_mod <- glm(T95.mn ~ year + julian_date, data=outputs, na.action="na.fail")
+summary(t95_mod)
+
+
+
+
