@@ -36,11 +36,9 @@ colnames(outputs)[1] = "species"
 ###Statistical Tests###
 #######################
 
-#global models
-
+##global models
 tcrit_global_mod <- glm(Tcrit.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
 dredge(tcrit_global_mod)
-
 
 t50_global_mod <- glm(T50.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
 dredge(t50_global_mod)
@@ -48,15 +46,21 @@ dredge(t50_global_mod)
 t95_global_mod <- glm(T95.mn ~ year * species * julian_date, data=outputs, na.action="na.fail")
 dredge(t95_global_mod)
 
-#best models
+##best models
 tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
 summary(tcrit_mod)
 
-t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
+t50_mod <- glm(T50.mn ~ species + year, data=outputs, na.action="na.fail")
 summary(t50_mod)
 
-t95_mod <- glm(T95.mn ~ year + julian_date, data=outputs, na.action="na.fail")
+t50_mod$species <- as.factor(t50_mod$species)
+summary(glht(t50_mod, mcp(species= "Tukey")))
+
+t95_mod <- glm(T95.mn ~ species + year, data=outputs, na.action="na.fail")
 summary(t95_mod)
+
+t95_mod$species = as.factor(t95_mod$species)
+summary(glht(t95_mod, mcp(species= "Tukey")))
 
 
 
