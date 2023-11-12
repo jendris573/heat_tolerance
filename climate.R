@@ -19,6 +19,7 @@ library(ggplot2)
 
 #Load NOAA Climate Data Online data
 tenn_clim<-read.csv("data/Tennessee_climate.csv")
+nas <- read.csv("data/Tennessee_climate.csv")
 
 #create column for year
 tenn_clim <- mutate(tenn_clim, year=year(tenn_clim$DATE))
@@ -39,6 +40,24 @@ tenn_clim<-tenn_clim[complete.cases(tenn_clim[,10]),]
 #filter for 1980-present
 tenn1980 <- tenn_clim %>%
   filter(year>1979)
+
+#determine number of NA observations in TMAX for 2022 and 2023
+nas <- mutate(nas, year=year(nas$DATE))
+
+nas_2022 <- nas %>%
+  filter(year == 2022)
+
+sum(is.na(nas_2022$TMAX))
+
+nas_2023 <- nas %>%
+  filter(year == 2023)
+
+sum(is.na(nas_2023$TMAX))
+
+nas_1980 <- nas %>%
+  filter(year>1979)
+
+sum(is.na(nas_1980$TMAX))
 
 ############################################
 ### Calculate Absolute High Temperatures ###
@@ -152,6 +171,26 @@ precip_2023 <- tenn1980 %>%
   filter(year==2023) %>%
   summarise(rain = sum(PRCP, na.rm = TRUE))
 
+june22_mean <- tenn1980 %>%
+  filter(year==2022) %>%
+  filter(month==6) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+june23_mean <- tenn1980 %>%
+  filter(year==2023) %>%
+  filter(month==6) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+july22_mean <- tenn1980 %>%
+  filter(year==2022) %>%
+  filter(month==7) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+july23_mean <- tenn1980 %>%
+  filter(year==2023) %>%
+  filter(month==7) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
 ################################
 ### Climate Plots start here ###
 ################################
@@ -239,7 +278,6 @@ summary(days_32_mod)
 ##################################
 ### Climate statistical models ###
 ##################################
-
 heat_season <- tenn1980 %>%
   filter(julian_date>120) %>%
   filter(julian_date<275)
