@@ -75,6 +75,7 @@ species <- c("Acer saccharum", "Celtis laevigata", "Fagus grandifolia", "Juglans
 leaf2022 <- c(38.8, 38.9, 45.3, 37.6, 36.5, 44.5, 40.6, 40.2, 45.7, 41.9, 45.9)
 leaf2023 <- c(43.5, 38.7, 41.0, 40.8, 38.7, 44.8, 40.7, 39.5, 43.5, 45.3, 42.1)
 
+leaf_temp<-as.data.frame(cbind(species,leaf2022,leaf2023))
 ############################################################################
 ### test significance of bootstrapped outputs against specific thresholds ###
 ############################################################################
@@ -315,11 +316,149 @@ colnames(heat_comp)<- c("species", "absolute high (tcrit)", "September absolute 
 
 write.xlsx(heat_comp,"data/threshold_p.xlsx", sheetName = "Sept_2023", append = TRUE, row.names = FALSE)
 
+#compare Tcrits to leaf level temperature for a given year
+#define month and year
+m1 <- 6
+y1 <- 2022
+#create an empty dataframe for June 2022
+heat_comp <- as.data.frame(matrix(NA, nrow=11, ncol=4))
 
+for (i in 1:length(species)) {
+  test<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(tcrit))
+  heat_comp[i,1] = species [i]
+  heat_comp[i,2] = round(1-mean(test$tcrit>=leaf_temp[i,2]), 4)
+  
+  test2<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T50))
+  heat_comp[i,3] = round(1-mean(test2$T50>=leaf_temp[i,2]), 4)
+  
+  test3<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T95))
+  heat_comp[i,4] = round(1-mean(test3$T95>=leaf_temp[i,2]), 4)
+}
+colnames(heat_comp)<- c("species", "Leaf June 22(tcrit)",
+                        "Leaf June 22 (T50)",
+                        "Leaf June 22 (T95)")
 
+write.xlsx(heat_comp,"data/threshold_p.xlsx", sheetName = "leaf_June_2022", append = TRUE, row.names = FALSE)
 
+#compare Tcrits to leaf level temperature for a given year
+#define month and year
+m1 <- 7
+y1 <- 2022
+#create an empty dataframe for July 2022
+heat_comp <- as.data.frame(matrix(NA, nrow=11, ncol=4))
 
+for (i in 1:length(species)) {
+  test<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(tcrit))
+  heat_comp[i,1] = species [i]
+  heat_comp[i,2] = round(1-mean(test$tcrit>=leaf_temp[i,2]), 4)
+  
+  test2<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T50))
+  heat_comp[i,3] = round(1-mean(test2$T50>=leaf_temp[i,2]), 4)
+  
+  test3<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T95))
+  heat_comp[i,4] = round(1-mean(test3$T95>=leaf_temp[i,2]), 4)
+}
+colnames(heat_comp)<- c("species", "Leaf July 22(tcrit)",
+                        "Leaf July 22 (T50)",
+                        "Leaf July 22 (T95)")
 
+write.xlsx(heat_comp,"data/threshold_p.xlsx", sheetName = "leaf_July_2022", append = TRUE, row.names = FALSE)
+
+#compare Tcrits to leaf level temperature for a given year
+#define month and year
+m1 <- 6
+y1 <- 2023
+#create an empty dataframe for June 2023
+heat_comp <- as.data.frame(matrix(NA, nrow=11, ncol=4))
+
+for (i in 1:length(species)) {
+  test<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(tcrit))
+  heat_comp[i,1] = species [i]
+  heat_comp[i,2] = round(1-mean(test$tcrit>=leaf_temp[i,3]), 4)
+  
+  test2<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T50))
+  heat_comp[i,3] = round(1-mean(test2$T50>=leaf_temp[i,3]), 4)
+  
+  test3<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T95))
+  heat_comp[i,4] = round(1-mean(test3$T95>=leaf_temp[i,3]), 4)
+}
+colnames(heat_comp)<- c("species", "Leaf June 23(tcrit)",
+                        "Leaf June 23 (T50)",
+                        "Leaf June 23 (T95)")
+
+write.xlsx(heat_comp,"data/threshold_p.xlsx", sheetName = "leaf_June_2023", append = TRUE, row.names = FALSE)
+
+#compare Tcrits to leaf level temperature for a given year
+#define month and year
+m1 <- 7
+y1 <- 2023
+#create an empty dataframe for July 2023
+heat_comp <- as.data.frame(matrix(NA, nrow=11, ncol=4))
+
+for (i in 1:length(species)) {
+  test<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(tcrit))
+  heat_comp[i,1] = species [i]
+  heat_comp[i,2] = round(1-mean(test$tcrit>=leaf_temp[i,3]), 4)
+  
+  test2<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T50))
+  heat_comp[i,3] = round(1-mean(test2$T50>=leaf_temp[i,3]), 4)
+  
+  test3<-heating_data%>%
+    filter(id==species[i])%>%
+    filter(month==m1)%>%
+    filter(year==y1) %>%
+    filter(!is.na(T95))
+  heat_comp[i,4] = round(1-mean(test3$T95>=leaf_temp[i,3]), 4)
+}
+colnames(heat_comp)<- c("species", "Leaf July 23(tcrit)",
+                        "Leaf July 23 (T50)",
+                        "Leaf July 23 (T95)")
+
+write.xlsx(heat_comp,"data/threshold_p.xlsx", sheetName = "leaf_July_2023", append = TRUE, row.names = FALSE)
 
 
 
