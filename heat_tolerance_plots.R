@@ -162,7 +162,7 @@ T50_June2022 <- ggplot(outputs%>%
   geom_hline(yintercept = 38.3, linetype = 3, color= "blue")+ #highest temp June 2022
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
-  ylim(30, 55)+
+  ylim(30, 60)+
   ggtitle("June 2022")+
   theme(panel.border = element_blank(),  
         panel.grid.major = element_blank(),
@@ -187,7 +187,7 @@ T50_July2022 <- ggplot(outputs%>%
   geom_hline(yintercept = 38.9, linetype = 3, color= "blue")+ #highest temp July 2022
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
-  ylim(30, 55)+
+  ylim(30, 60)+
   ggtitle("July 2022")+
   theme_bw()+
   theme(legend.position="none")+
@@ -210,7 +210,7 @@ T50_June2023 <- ggplot(outputs%>%
   geom_hline(yintercept = 38.3, linetype = 3, color= "blue")+ #highest temp June 2023
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
-  ylim(30, 55)+
+  ylim(30, 60)+
   ggtitle("June 2023")+
   theme_bw()+
   theme(legend.position="none")+
@@ -233,7 +233,7 @@ T50_July2023 <- ggplot(outputs%>%
   geom_hline(yintercept = 37.2, linetype = 3, color= "blue")+ #highest temp July 2023
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
-  ylim(30, 55)+
+  ylim(30, 60)+
   ggtitle("July 2023")+
   theme_bw()+
   theme(legend.position="none")+

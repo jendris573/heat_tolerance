@@ -12,6 +12,8 @@ library(tidyverse)
 library(pracma)
 library(multcomp)
 library(ggplot2)
+library(ggfortify)
+library(gridExtra)
 
 ########################
 ### Data Preparation ###
@@ -39,6 +41,30 @@ tenn_clim<-tenn_clim[complete.cases(tenn_clim[,10]),]
 #filter for 1980-present
 tenn1980 <- tenn_clim %>%
   filter(year>1979)
+
+#determine number of NA observations in TMAX for 2022 and 2023
+nas <- read.csv("data/Tennessee_climate.csv")
+
+nas <- mutate(nas, year=year(nas$DATE))
+
+nas_2022 <- nas %>%
+  filter(year == 2022)
+
+sum(is.na(nas_2022$TMAX))
+
+nas_2023 <- nas %>%
+  filter(year == 2023)
+
+sum(is.na(nas_2023$TMAX))
+
+nas_1980 <- nas %>%
+  filter(year>1979)
+
+sum(is.na(nas_1980$TMAX))
+
+nas_2010 <- nas %>%
+  filter(year == 2010)
+sum(is.na(nas_2010$TMAX))
 
 ############################################
 ### Calculate Absolute High Temperatures ###
@@ -152,6 +178,26 @@ precip_2023 <- tenn1980 %>%
   filter(year==2023) %>%
   summarise(rain = sum(PRCP, na.rm = TRUE))
 
+june22_mean <- tenn1980 %>%
+  filter(year==2022) %>%
+  filter(month==6) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+june23_mean <- tenn1980 %>%
+  filter(year==2023) %>%
+  filter(month==6) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+july22_mean <- tenn1980 %>%
+  filter(year==2022) %>%
+  filter(month==7) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
+july23_mean <- tenn1980 %>%
+  filter(year==2023) %>%
+  filter(month==7) %>%
+  summarise(mean_temp = mean(TMAX, na.rm = TRUE))
+
 ################################
 ### Climate Plots start here ###
 ################################
@@ -163,14 +209,13 @@ TN_TMAX <- tenn1980 %>%
   group_by(year) %>%
   summarise(abs_TMAX = max(TMAX))
 
-
-
 #create plot for record high by year
 record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
-  geom_smooth(method = "lm")+
   geom_point()+
+  scale_y_continuous(limits = c(32, 45),
+                     breaks=seq(32,45,by=2),
+                     minor_breaks = seq(32, 45, 1)) +
   labs(title = "Annual Highest Temperatures (°C) since 1980",
-       subtitle = "Clarksville, TN",
        y= "Temperature °C",
        x= "Year")+
   theme_bw()+
@@ -179,34 +224,43 @@ record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
       panel.grid.minor = element_blank(),
       panel.background  = element_blank(),
       axis.line = element_line(colour = "black"),
-      axis.title.x = element_blank(),
+      #axis.title.x = element_blank(),
       axis.text.x=element_text(angle = 45, hjust = 1))
 
 record_TMAX_plot
 
-#number of days above 35C (95F)
-days_35 <- tenn1980 %>%
-  group_by(year) %>%
-  summarise(number=sum(TMAX>34.99))
+record_TMAX_mod <- glm(abs_TMAX ~ year, data=TN_TMAX)
+summary(record_TMAX_mod)
 
-#plot number of days above 35C
-days_35_plot <- ggplot(days_35, aes(x=year, y=number ))+
-  geom_point() +
-  geom_smooth(stat="smooth",method="lm")+
+## mean TMAX by year
+
+#determine hottest day by year
+mean_TN_TMAX <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(mean_TMAX = mean(TMAX))
+
+#create plot for mean high by year
+mean_TMAX_plot <- ggplot(mean_TN_TMAX, aes(x=year, y= mean_TMAX))+
+  geom_point()+
+  scale_y_continuous(limits = c(14, 25),
+                     breaks=seq(14,25,by=2),
+                     minor_breaks = seq(32, 45, 1)) +
+  labs(title = "Mean Annual High Temperatures (°C) since 1980",
+       y= "Temperature °C",
+       x= "Year")+
   theme_bw()+
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
+        panel.background  = element_blank(),
         axis.line = element_line(colour = "black"),
-        axis.title.x = element_blank(),
-        axis.text.x=element_text(angle = 45, hjust = 1))+
-  labs(title = "Number of Days Above 35°C",
-       subtitle = "Clarksville, TN",
-       y= "Number of Days",
-       x= "Year")
+        #axis.title.x = element_blank(),
+        axis.text.x=element_text(angle = 45, hjust = 1))
 
-days_35_plot
+mean_TMAX_plot
+
+mean_TMAX_mod <- glm(mean_TMAX ~ year, data=mean_TN_TMAX)
+summary(mean_TMAX_mod)
 
 
 #number of days above 32.2C (90F)
@@ -217,7 +271,6 @@ days_32 <- tenn1980 %>%
 #plot number of days above 32.2C
 days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
   geom_point() +
-  geom_smooth(stat="smooth",method="lm")+
   theme_bw()+
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
@@ -227,7 +280,6 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
         axis.title.x = element_blank(),
         axis.text.x=element_text(angle = 45, hjust = 1))+
   labs(title = "Number of Days Above 32.2°C",
-       subtitle = "Clarksville, TN",
        y= "Number of Days",
        x= "Year")
 
@@ -236,10 +288,10 @@ days_32_plot
 days_32_mod <- glm(number ~ year, data=days_32)
 summary(days_32_mod)
 
+grid.arrange(mean_TMAX_plot, record_TMAX_plot, days_32_plot,ncol=1)
 ##################################
 ### Climate statistical models ###
 ##################################
-
 heat_season <- tenn1980 %>%
   filter(julian_date>120) %>%
   filter(julian_date<275)
