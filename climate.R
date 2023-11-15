@@ -33,38 +33,12 @@ tenn_clim$julian_date <- yday(tenn_clim$DATE)
 
 #omit NA in precipitation recordings 
 tenn_clim<-tenn_clim[complete.cases(tenn_clim[,6]),]
-#omit NA in TMAX recordings 
+#omit NA in TMAX/TMIN recordings 
 tenn_clim<-tenn_clim[complete.cases(tenn_clim[,9]),]
-#omit NA in TMIN recordings 
-tenn_clim<-tenn_clim[complete.cases(tenn_clim[,10]),]
 
 #filter for 1980-present
 tenn1980 <- tenn_clim %>%
   filter(year>1979)
-
-#determine number of NA observations in TMAX for 2022 and 2023
-nas <- read.csv("data/Tennessee_climate.csv")
-
-nas <- mutate(nas, year=year(nas$DATE))
-
-nas_2022 <- nas %>%
-  filter(year == 2022)
-
-sum(is.na(nas_2022$TMAX))
-
-nas_2023 <- nas %>%
-  filter(year == 2023)
-
-sum(is.na(nas_2023$TMAX))
-
-nas_1980 <- nas %>%
-  filter(year>1979)
-
-sum(is.na(nas_1980$TMAX))
-
-nas_2010 <- nas %>%
-  filter(year == 2010)
-sum(is.na(nas_2010$TMAX))
 
 ############################################
 ### Calculate Absolute High Temperatures ###
@@ -215,7 +189,7 @@ record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
   scale_y_continuous(limits = c(32, 45),
                      breaks=seq(32,45,by=2),
                      minor_breaks = seq(32, 45, 1)) +
-  labs(title = "Annual Highest Temperatures (°C) since 1980",
+  labs(title = "b",
        y= "Temperature °C",
        x= "Year")+
   theme_bw()+
@@ -245,7 +219,7 @@ mean_TMAX_plot <- ggplot(mean_TN_TMAX, aes(x=year, y= mean_TMAX))+
   scale_y_continuous(limits = c(14, 25),
                      breaks=seq(14,25,by=2),
                      minor_breaks = seq(32, 45, 1)) +
-  labs(title = "Mean Annual High Temperatures (°C) since 1980",
+  labs(title = "a",
        y= "Temperature °C",
        x= "Year")+
   theme_bw()+
@@ -279,7 +253,7 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
         axis.line = element_line(colour = "black"),
         axis.title.x = element_blank(),
         axis.text.x=element_text(angle = 45, hjust = 1))+
-  labs(title = "Number of Days Above 32.2°C",
+  labs(title = "c",
        y= "Number of Days",
        x= "Year")
 
@@ -354,3 +328,30 @@ annual_model <- glm(TMAX ~ julian_date + year, data = tenn1980 )
 summary(annual_model)
 
 
+########################################
+### Look for NAs in temperature data ###
+########################################
+
+#determine number of NA observations in TMAX for 2022 and 2023
+nas <- read.csv("data/Tennessee_climate.csv")
+
+nas <- mutate(nas, year=year(nas$DATE))
+
+nas_2022 <- nas %>%
+  filter(year == 2022)
+
+sum(is.na(nas_2022$TMAX))
+
+nas_2023 <- nas %>%
+  filter(year == 2023)
+
+sum(is.na(nas_2023$TMAX))
+
+nas_1980 <- nas %>%
+  filter(year>1979)
+
+sum(is.na(nas_1980$TMAX))
+
+nas_2010 <- nas %>%
+  filter(year == 2010)
+sum(is.na(nas_2010$TMAX))
