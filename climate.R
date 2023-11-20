@@ -183,15 +183,21 @@ TN_TMAX <- tenn1980 %>%
   group_by(year) %>%
   summarise(abs_TMAX = max(TMAX))
 
+mean_TMAX <- tenn1980 %>%
+  filter(julian_date > 151) %>%
+  filter(julian_date < 274) %>%
+  summarise(mean_TMAX = mean(TMAX))
+
 #create plot for record high by year
 record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
   geom_point()+
-  scale_y_continuous(limits = c(32, 45),
+  scale_y_continuous(limits = c(30, 45),
                      breaks=seq(32,45,by=2),
                      minor_breaks = seq(32, 45, 1)) +
-  labs(title = "b",
-       y= "Temperature °C",
-       x= "Year")+
+  labs(
+    title = "b",
+    y= "Temperature °C",
+    x= "Year")+
   theme_bw()+
   theme(panel.border = element_blank(), 
       panel.grid.major = element_blank(),
@@ -245,6 +251,8 @@ days_32 <- tenn1980 %>%
 #plot number of days above 32.2C
 days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
   geom_point() +
+  geom_smooth(method = lm)+
+  geom_hline(yintercept = 54.1, color= "red", linewidth = 1.25)+ #mean number of days above 32.2
   theme_bw()+
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
@@ -253,7 +261,8 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
         axis.line = element_line(colour = "black"),
         axis.title.x = element_blank(),
         axis.text.x=element_text(angle = 45, hjust = 1))+
-  labs(title = "c",
+  labs(
+    #title = "c",
        y= "Number of Days",
        x= "Year")
 
