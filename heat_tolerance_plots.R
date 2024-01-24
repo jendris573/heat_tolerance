@@ -16,9 +16,9 @@ library(MuMIn)
 library(reshape2)
 library(gridGraphics)
 
-##################################
-### Data entry and preparation ###
-##################################
+# # # # # # # # # # # # # # # # #
+# Data entry and preparation ----
+# # # # # # # # # # # # # # # # #
 
 #read in data sets
 outputs <- read_excel("data/crit_values_final.xlsx")
@@ -42,9 +42,9 @@ leaf_max_temp$location<-'leaf_image2.jpg'#change this filename to whatever .jpg 
 #takes forever and you end up with a huge file size for the ggplot. Not sure why it does this.
 
 
-###################################
-### Plots for each sample period###
-###################################
+# # # # # # # # # # # # # # # # # #
+# Plots for each sample period ----
+# # # # # # # # # # # # # # # # # #
 
 ### TCRIT for June/July 2022/2023 ###
 #June 2022
