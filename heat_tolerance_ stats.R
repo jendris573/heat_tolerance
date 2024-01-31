@@ -14,9 +14,9 @@ library(car)
 library(stringr)
 library(MuMIn)
 
-##################################
-### Data entry and preparation ###
-##################################
+# # # # # # # # # # # # # # # # #
+# Data entry and preparation ----
+# # # # # # # # # # # # # # # # #
 
 outputs <- read_excel("data/crit_values_final.xlsx")
 
@@ -38,9 +38,9 @@ leaf_temp_data <- read_excel("data/leaf_temperatures.xlsx", sheet =2)
 #merge the two dataframes
 leaf_temps <- merge(outputs, leaf_temp_data, by=c("species", "year"))
 
-#######################
-###Statistical Tests###
-#######################
+# # # # # # # # # # # # #
+# Statistical Tests ----
+# # # # # # # # # # # # #
 
 ##global models
 tcrit_global_mod <- glm(Tcrit.mn ~ year * julian_date, data=outputs, na.action="na.fail")
@@ -72,4 +72,6 @@ leaf_temp_tcrit_mod_b <- glm(Tcrit.mn ~ leaf_temp * species, data=leaf_temps, na
 
 dredge(leaf_temp_tcrit_mod_b)
 
-
+# # # # # # # # # # # #
+# Core Three Stats ----
+# # # # # # # # # # # #

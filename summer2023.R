@@ -15,22 +15,22 @@ library(readxl)
 # Data prep ----
 # # # # # # # # #
 
-boots <- read_excel("data/boot_1000.xlsx")
+boots2023 <- read_excel("data/boot_1000.xlsx")
 
 #separate ID column into separate columns
-boots <- separate(data = boots, col = id, into = c("date", "state", "species"), sep = "\\.")
+boots2023 <- separate(data = boots2023, col = id, into = c("date", "state", "species"), sep = "\\.")
 
 #create column for julian date
-boots$julian_date <- yday(boots$date)
+boots2023$julian_date <- yday(boots2023$date)
 
 #create column for month
-boots <- mutate(boots, month=month(boots$date))
+boots2023 <- mutate(boots2023, month=month(boots2023$date))
 
 #create column for year
-boots <- mutate(boots, year=year(boots$date))
+boots2023 <- mutate(boots2023, year=year(boots2023$date))
 
 #filter for only 2023 data
-boots2023 <- boots %>%
+boots2023 <- boots2023 %>%
   filter(year==2023)
 
 #omit any blank spots in the tcrit column
@@ -40,6 +40,25 @@ boots2023 <- boots2023[complete.cases(boots2023[,5]),]
 boots2023 <- boots2023%>%
   group_by(species, julian_date) %>%
   dplyr::summarise(mean_tcrit=mean(tcrit))
+
+#Load NOAA Climate Data Online data
+tenn1980<-read.csv("data/Tennessee_climate.csv")
+
+#create column for year
+tenn1980 <- mutate(tenn1980, year=year(tenn1980$DATE))
+
+#create column for month
+tenn1980 <- mutate(tenn1980, month=month(tenn1980$DATE))
+
+## create column for julian date##
+tenn1980$julian_date <- yday(tenn1980$DATE)
+
+#omit NA in TMAX/TMIN recordings 
+tenn1980<-tenn1980[complete.cases(tenn1980[,9]),]
+
+#filter for 1980-present
+tenn1980 <- tenn1980 %>%
+  filter(year>1979)
 
 # # # # # # #
 # Plots ----
@@ -171,12 +190,35 @@ grid.arrange(beech_plot, maple_plot, chestnutoak_plot, redoak_plot, poplar_plot,
              sweetgum_plot, walnut_plot, cherry_plot, sugarberry_plot, hophornbeam_plot, 
              elm_plot, nrow=4)
 
+# # # # # # # # # #
+# Core 3 Plots ----
+# # # # # # # # # #
+
+core_three <- boots2023 %>%
+  filter(species=="Acer saccharum"|species== "Fagus grandifolia"| species=="Liriodendron tulipifera")
+
+core_plot<-ggplot(data=core_three, aes(x = julian_date, y=mean_tcrit, color=species)) +
+  geom_line()+
+  geom_hline(yintercept = 43.5, linetype = 2, color= "red")+ #max leaf temp - maple
+  geom_hline(yintercept = 41.0, linetype = 2, color= "green")+ #max leaf temp - beech
+  geom_hline(yintercept = 38.7, linetype = 2, color= "blue")+ #max leaf temp - poplar
+  #geom_smooth(method = loess)+
+  labs(x="Julian Date", y="Tcrit")+
+  theme_bw()+
+  ggtitle("Core 3 Species in 2023")
+
+core_plot
 
 
 
 
+# # # # # # # # # # # #
+# Core Three Stats ----
+# # # # # # # # # # # #
 
+core_3_mod <- glm(mean_tcrit ~ species * julian_date, data=core_three, na.action="na.fail")
 
+summary(core_3_mod)
 
 
 
