@@ -13,6 +13,8 @@ library(gridExtra)
 library(car)
 library(stringr)
 library(MuMIn)
+library(lme4)
+library(nlme)
 
 # # # # # # # # # # # # # # # # #
 # Data entry and preparation ----
@@ -37,6 +39,33 @@ leaf_temp_data <- read_excel("data/leaf_temperatures.xlsx", sheet =2)
 
 #merge the two dataframes
 leaf_temps <- merge(outputs, leaf_temp_data, by=c("species", "year"))
+
+jj_boots <- read_excel("data/boot_1000.xlsx")
+
+#separate ID column into separate columns
+jj_boots <- separate(data = jj_boots, col = id, into = c("date", "state", "species"), sep = "\\.")
+
+#create column for julian date
+jj_boots$julian_date <- yday(jj_boots$date)
+
+#change date column from character to date
+jj_boots$Date2<-ymd(jj_boots$date)
+
+#keep just 2022 and 2023
+jj_boots<-jj_boots%>%
+  filter(lubridate::year(Date2)%in%c(2022,2023))
+
+#keep only June and July
+jj_boots<-jj_boots%>%
+  filter(lubridate::month(Date2)%in%c(6,7))
+
+jj_boots$Date2 <- as.Date(jj_boots$Date2)
+
+#create column for month
+jj_boots$month <- as.factor(lubridate::month(jj_boots$Date2))
+
+#create column for year
+jj_boots$year <- as.factor(lubridate::year(jj_boots$Date2))
 
 # # # # # # # # # # # # #
 # Statistical Tests ----
@@ -73,5 +102,29 @@ leaf_temp_tcrit_mod_b <- glm(Tcrit.mn ~ leaf_temp * species, data=leaf_temps, na
 dredge(leaf_temp_tcrit_mod_b)
 
 # # # # # # # # # # # #
-# Core Three Stats ----
+# Tcrit models ----
 # # # # # # # # # # # #
+
+jj_tcrit <- outputs %>%
+  filter(month==6|month==7)
+
+tcrit_models <- glm(Tcrit.mn ~ month * year, data= jj_tcrit, na.action="na.fail")
+
+summary(tcrit_models)
+
+
+tcrit_model2 <- lme(Tcrit.mn ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit, na.action="na.fail")
+
+summary(tcrit_model2)
+anova(tcrit_model2)
+
+
+
+##Boot 1000 models
+
+jj_boots <- jj_boots[complete.cases(jj_boots[,5]),]
+
+jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
+
+summary(jj_boots_mod)
+
