@@ -101,9 +101,9 @@ leaf_temp_tcrit_mod_b <- glm(Tcrit.mn ~ leaf_temp * species, data=leaf_temps, na
 
 dredge(leaf_temp_tcrit_mod_b)
 
-# # # # # # # # # # # #
+# # # # # # # # # #
 # Tcrit models ----
-# # # # # # # # # # # #
+# # # # # # # # # #
 
 jj_tcrit <- outputs %>%
   filter(month==6|month==7)
@@ -124,7 +124,44 @@ anova(tcrit_model2)
 
 jj_boots <- jj_boots[complete.cases(jj_boots[,5]),]
 
-jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
+jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Acer saccharum"), na.action="na.fail")
 
 summary(jj_boots_mod)
+
+# # # # # # # # # # #
+# Species models ----
+# # # # # # # # # # #
+
+#maple model
+maple_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
+
+#sugarberry model
+sugarberry_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots %>% filter(species=="Celtis laevigata"), na.action="na.fail")
+
+#beech model
+
+
+#walnut model
+
+
+
+
+Fagus grandifolia
+Juglans nigra
+Liquidambar styraciflua
+Liriodendron tulipifera
+Ostrya virginiana
+Prunus serotina
+Quercus falcata
+Quercus montana
+Ulmus rubra
+
+
+
+
+
+
+
+
+
 
