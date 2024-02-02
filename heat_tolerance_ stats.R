@@ -101,9 +101,9 @@ leaf_temp_tcrit_mod_b <- glm(Tcrit.mn ~ leaf_temp * species, data=leaf_temps, na
 
 dredge(leaf_temp_tcrit_mod_b)
 
-# # # # # # # # # # # #
+# # # # # # # # # #
 # Tcrit models ----
-# # # # # # # # # # # #
+# # # # # # # # # #
 
 jj_tcrit <- outputs %>%
   filter(month==6|month==7)
@@ -124,7 +124,74 @@ anova(tcrit_model2)
 
 jj_boots <- jj_boots[complete.cases(jj_boots[,5]),]
 
-jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
+jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Acer saccharum"), na.action="na.fail")
 
 summary(jj_boots_mod)
+
+# # # # # # # # # # #
+# Species models ----
+# # # # # # # # # # #
+
+#maple model
+maple_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Acer saccharum"), na.action="na.fail")
+
+summary(maple_mod)
+
+#sugarberry model
+sugarberry_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Celtis laevigata"), na.action="na.fail")
+
+summary(sugarberry_mod)
+
+#beech model
+beech_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Fagus grandifolia"), na.action="na.fail")
+
+summary(beech_mod)
+
+#walnut model
+walnut_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Juglans nigra"), na.action="na.fail")
+
+summary(walnut_mod)
+
+#sweetgum model
+sweetgum_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Liquidambar styraciflua"), na.action="na.fail")
+
+summary(sweetgum_mod)
+
+#poplar model
+poplar_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Liriodendron tulipifera"), na.action="na.fail")
+
+summary(poplar_mod)
+
+#hophornbeam model
+hophornbeam_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Ostrya virginiana"), na.action="na.fail")
+
+summary(hophornbeam_mod)
+
+#cherry model
+cherry_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Prunus serotina"), na.action="na.fail")
+
+summary(cherry_mod)
+
+#red oak model
+redoak_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Quercus falcata"), na.action="na.fail")
+
+summary(redoak_mod)
+
+#chestnut oak model
+chestnut_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Quercus montana"), na.action="na.fail")
+
+summary(chestnut_mod)
+
+#elm model
+elm_mod <- lmer(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Ulmus rubra"), na.action="na.fail")
+
+summary(elm_mod)
+
+
+
+
+
+
+
+
 
