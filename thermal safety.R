@@ -76,6 +76,20 @@ sp2023<-new%>%filter(year==2023&month==6)%>%
 heating_data2$Species<-factor(heating_data2$Species,levels=sp2022$Species)
 levels(heating_data2$Species)
 
+#only need to run the code below a single time
+# #Create dataframe of mean values to be outputted and used in other stats
+# #right all crit value bootstraps
+# therm<-heating_data2[,c(1,2,4,6:8,11:13,14:16)]
+# #write all bootstraps
+# write.csv(therm,"data/boot_thermal_safety_leaf_air.csv")
+# #write just the mean values - calculate mean values first
+# therm_mean<-heating_data2%>%
+#   group_by(Species,year,month)%>%
+#   summarise(across(c("tcrit_safety":"T95_safety_air"),~mean(.x,na.rm=TRUE)))
+# therm_mean<-therm_mean[,-7]
+# 
+# write.csv(therm_mean,"data/mean_thermal_safety_leaf_air.csv")
+
 #melt the dataframe down so that the tcrit_safety and tcrit_safety_air are a single column
 heating_data3<-heating_data2%>%
   pivot_longer(cols=c("tcrit_safety","tcrit_safety_air"),names_to="type",values_to="diff")
@@ -151,7 +165,84 @@ g6<-ggplot(data=heating_data3%>%filter(year==2023&month==7),aes(x=diff,y=Species
   ggtitle("July 2023")
 g6
 grid.arrange(g3,g4,g5,g6,ncol=2)# #start to create some plots from these summary ----
+###########################################
+#make again but alphabetical order ----
+###########################################
+#first need to put it back in alphabetical order by species
+heating_data4<-heating_data3
+levels(as.factor(heating_data$Species))
+heating_data4$Species<-factor(heating_data4$Species,levels=levels(as.factor(heating_data$Species)))
+levels(heating_data4$Species)
+#making a four panel figure with year and month separated
+g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
+  geom_density_ridges2(scale = .9,alpha=0.8) +
+  #scale_y_discrete(expand=c(0.01, 0)) +
+xlim(-15,15) +
+  xlab("Thermal safety margin")+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        panel.background=element_blank(),axis.line=element_line(colour="black"),
+        legend.position = "none",
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.1,vjust=-5),
+        axis.text.x=element_text(size=14))+
+  geom_vline(xintercept=0,linewidth=1)+
+  scale_fill_manual(name="Month",values=c("gray30","gray70"),
+                    labels=c("Safety margin - air","Safety margin - leaf"))+
+  #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
+  ggtitle("June 2022")
+g7
+g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
+  geom_density_ridges2(scale = .9,alpha=0.8) +
+  #scale_y_discrete(expand=c(0.01, 0)) +
+  xlim(-15,15) +
+  xlab("Thermal safety margin")+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        panel.background=element_blank(),axis.line=element_line(colour="black"),
+        legend.position = c(0.2,0.7),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.1,vjust=-5),
+        axis.text.x=element_text(size=14))+
+  geom_vline(xintercept=0,linewidth=1)+
+  scale_fill_manual(name="Month",values=c("gray30","gray70"),
+                    labels=c("Safety margin - air","Safety margin - leaf"))+
+  #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
+  ggtitle("July 2022")
+g8
 
+g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
+  geom_density_ridges2(scale = .9,alpha=0.8) +
+  #scale_y_discrete(expand=c(0.01, 0)) +
+  xlim(-15,15) +
+  xlab("Thermal safety margin")+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        panel.background=element_blank(),axis.line=element_line(colour="black"),
+        legend.position = "none",
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.1,vjust=-5),
+        axis.text.x=element_text(size=14))+
+  geom_vline(xintercept=0,linewidth=1)+
+  scale_fill_manual(name="Month",values=c("gray30","gray70"),
+                    labels=c("Safety margin - air","Safety margin - leaf"))+
+  ggtitle("June 2023")
+g9
+
+g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
+  geom_density_ridges2(scale = .9,alpha=0.8) +
+  #scale_y_discrete(expand=c(0.01, 0)) +
+  xlim(-15,15) +
+  xlab("Thermal safety margin")+
+  theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+        panel.background=element_blank(),axis.line=element_line(colour="black"),
+        legend.position = "none",
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.1,vjust=-5),
+        axis.text.x=element_text(size=14))+
+  geom_vline(xintercept=0,linewidth=1)+
+  scale_fill_manual(name="Month",values=c("gray30","gray70"),
+                    labels=c("Safety margin - air","Safety margin - leaf"))+
+  ggtitle("July 2023")
+g10
+grid.arrange(g7,g8,g9,g10,ncol=2)# #start to create some plots from these summary ----
 # #old air v leaf density plot plotting both months for all species on a single panel
 # g4<-ggplot(data=heating_data3%>%filter(year==2023),aes(x=diff,y=Species,fill=grouping,alpha=grouping))+
 #   geom_density_ridges2(scale = .9,alpha=0.8) +
