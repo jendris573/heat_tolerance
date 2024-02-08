@@ -1,5 +1,5 @@
-###Heating Tolerance Threshold Analysis###
-###Code written by Joe Endris###
+###Heating Tolerance Threshold Analysis
+###Code written by Joe Endris
 ###Function written by Evan Rehm
 
 #Libraries
@@ -16,9 +16,9 @@ library(gridExtra)
 library(car)
 library(stringr)
 
-##################################
-### Data entry and preparation ###
-##################################
+# # # # # # # # # # # # # # # # #
+# Data entry and preparation ----
+# # # # # # # # # # # # # # # # #
 
 #read in data
 heating_data<-read_excel("data/leaf_heating.xlsx")
@@ -44,9 +44,9 @@ heating_data <- heating_data %>%
 heating_data <- heating_data %>%
   filter(location == "TN")
 
-###############################################
-### Code to estimate temperature thresholds ###
-###############################################
+# # # # # # # # # # # # # # # # # # # # # # # #
+# Code to estimate temperature thresholds ----
+# # # # # # # # # # # # # # # # # # # # # # # #
 
 #random number generation starting point for reproduceability
 set.seed(99)
@@ -188,6 +188,7 @@ temp<-psiiht(Temperature=heating_data$temperature, FvFm=heating_data$fv_fm, cont
 ### WAIT FOR CODE TO RUN!! ###
 
 ### WAIT FOR CODE TO RUN!! ###
+
 #write the outputs to a file so we don't have to rerun these scripts
 #write.xlsx2(temp,"data/boot_predictions.xlsx")
 n_ID <- length(unique(heating_data$Unique_ID))

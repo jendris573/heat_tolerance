@@ -131,63 +131,69 @@ summary(jj_boots_mod)
 # Species models ----
 # # # # # # # # # # #
 
+
 #maple model
-maple_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Acer saccharum"), na.action="na.fail")
+maple_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
 
 summary(maple_mod)
 
 #sugarberry model
-sugarberry_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Celtis laevigata"), na.action="na.fail")
+sugarberry_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Celtis laevigata"), na.action="na.fail")
 
 summary(sugarberry_mod)
 
 #beech model
-beech_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Fagus grandifolia"), na.action="na.fail")
+beech_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Fagus grandifolia"), na.action="na.fail")
 
 summary(beech_mod)
 
 #walnut model
-walnut_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Juglans nigra"), na.action="na.fail")
+walnut_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Juglans nigra"), na.action="na.fail")
 
 summary(walnut_mod)
 
 #sweetgum model
-sweetgum_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Liquidambar styraciflua"), na.action="na.fail")
+sweetgum_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Liquidambar styraciflua"), na.action="na.fail")
 
 summary(sweetgum_mod)
 
 #poplar model
-poplar_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Liriodendron tulipifera"), na.action="na.fail")
+poplar_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Liriodendron tulipifera"), na.action="na.fail")
 
 summary(poplar_mod)
 
 #hophornbeam model
-hophornbeam_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Ostrya virginiana"), na.action="na.fail")
+hophornbeam_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Ostrya virginiana"), na.action="na.fail")
 
 summary(hophornbeam_mod)
 
 #cherry model
-cherry_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Prunus serotina"), na.action="na.fail")
+cherry_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Prunus serotina"), na.action="na.fail")
 
 summary(cherry_mod)
 
 #red oak model
-redoak_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Quercus falcata"), na.action="na.fail")
+redoak_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Quercus falcata"), na.action="na.fail")
 
 summary(redoak_mod)
 
 #chestnut oak model
-chestnut_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Quercus montana"), na.action="na.fail")
+chestnut_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Quercus montana"), na.action="na.fail")
 
 summary(chestnut_mod)
 
 #elm model
-elm_mod <- glm(Tcrit.mn ~ as.factor(month) * as.factor(year), data= jj_tcrit %>% filter(species=="Ulmus rubra"), na.action="na.fail")
+elm_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Ulmus rubra"), na.action="na.fail")
 
 summary(elm_mod)
 
 
+# # # # # # # # # # # # # #
+# Leaf Temp TSM models ----
+# # # # # # # # # # # # # #
 
+#leaf to air thermal safety margins
+#leaf_tsm_model <- glm(Tcrit.mn ~ month * year, data= jj_tcrit, na.action="na.fail")
 
 
 
