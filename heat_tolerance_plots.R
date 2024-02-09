@@ -65,7 +65,25 @@ tenn1980 <- tenn_clim %>%
 # # # # # # # # # # # # # # # # # #
 TN_mean <- tenn1980 %>%
   group_by(year) %>%
-  summarise(mean_TMAX = max(TMAX))
+  summarise(mean_TMAX = mean(TMAX))
+
+mean_TMAX_plot <- ggplot(TN_mean, aes(x=year, y= mean_TMAX))+
+  geom_point()+
+  geom_smooth(method= lm)+
+  scale_y_continuous(limits = c(17.5, 25)) +
+  labs(
+    y= "Temperature °C",
+    x= "Year")+
+  theme_bw(base_size = 18)+
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background  = element_blank(),
+        axis.line = element_line(colour = "black"),
+        #axis.title.x = element_blank(),
+        axis.text.x=element_text(angle = 45, hjust = 1))
+
+mean_TMAX_plot
 
 # # # # # # # # # # # # #
 # hottest day of year----
@@ -87,12 +105,13 @@ mean(mean_TMAX$abs_TMAX)
 #create plot for record high by year
 record_TMAX_plot <- ggplot(TN_TMAX, aes(x=year, y= abs_TMAX))+
   geom_point()+
+  geom_smooth(method= lm)+
   #geom_hline(yintercept = 36.58824, color= "red", linewidth = 1.25)+ #mean summer TMAX
   scale_y_continuous(limits = c(33, 44),
                      breaks=seq(32,45,by=2),
                      minor_breaks = seq(32, 45, 1)) +
   labs(
-    y= "Highest Temperature °C",
+    y= "Temperature °C",
     x= "Year")+
   theme_bw(base_size = 18)+
   theme(panel.border = element_blank(), 
@@ -117,6 +136,7 @@ days_32 <- tenn1980 %>%
 #plot number of days above 32.2C
 days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
   geom_point() +
+  geom_smooth(method= lm)+
   #geom_hline(yintercept = 54.1, color= "red", linewidth = 1.25)+ #mean number of days above 32.2
   theme_bw(base_size = 18)+
   theme(panel.border = element_blank(), 
@@ -125,10 +145,17 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
         panel.background = element_blank(),
         axis.line = element_line(colour = "black"),
         axis.text.x=element_text(angle = 45, hjust = 1))+
-  labs(y= "Number of Days >32.2°C",
+  labs(y= "Number of Days",
        x= "Year")
 
 days_32_plot
+
+# # # # # # # # # # # # # # # #
+## facet wrap climate plot ----
+# # # # # # # # # # # # # # # #
+
+grid.arrange(mean_TMAX_plot, record_TMAX_plot, days_32_plot,ncol=1)
+
 
 # # # # # # # # # # # # # # 
 # four month Tcrit plot----
