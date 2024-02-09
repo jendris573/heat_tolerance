@@ -208,9 +208,11 @@ therm$ID<-paste(therm$Species,therm$year,therm$month,sep=".")
 therm2<-therm%>%
   group_by(ID)%>%
   pivot_longer(cols=c(tcrit_safety,tcrit_safety_air))
+
 #leaf to air thermal safety margins
 #this will be a simple paired t-test as we are comparing thermals safety margin or tcrit v leaf and tcrit v air
 t.test(therm2$value~therm2$name,paired=TRUE,alternative="two.sided")#very small p-value means there is a difference
+
 #simple plot to visualize the difference - thermal safety margin compared to air is higher than compared to leaf
 ggplot(therm2,aes(x=name,y=value))+
   geom_boxplot()
@@ -220,16 +222,19 @@ ggplot(therm2,aes(x=name,y=value))+
 #start with only thermal safety margin based on leaf temp
 leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#the interaction is not significant so drop it
+
 leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#best model very similar to tcrit model
-#safety margin increase from June to July - this is counterintuitive since temps are hotter in July. I guess trees
-#are raising tcrit faster than temp is increasing
+
+#safety margin increase from June to July - this is counterintuitive since temps are hotter in July.
+#I guess trees are raising tcrit faster than temp is increasing.
 #safety margin decreases from 2022 to 2023. Might be related to SPEI index and that drought stressed trees have higher tcrit
 
 ##build second model but with thermal safety margin compared to air temperature
-#I wonder if thise model is needed since we are arguing that air temperature is not a good measure of real danger
+#I wonder if this model is needed since we are arguing that air temperature is not a good measure of real danger
 leaf_tsm_model <- lme(tcrit_safety_air ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#the interaction is not significant so drop it, but year is also potentially not significant
+
 leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#once dropping the interaction year becomes significant. Again this model is similar to the tcrit only model
 
