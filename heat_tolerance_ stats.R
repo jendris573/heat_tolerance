@@ -15,6 +15,7 @@ library(stringr)
 library(MuMIn)
 library(lme4)
 library(nlme)
+library(ggplot2)
 
 # # # # # # # # # # # # # # # # #
 # Data entry and preparation ----
@@ -71,25 +72,26 @@ jj_boots$year <- as.factor(lubridate::year(jj_boots$Date2))
 # Statistical Tests ----
 # # # # # # # # # # # # #
 
-##global models
-tcrit_global_mod <- glm(Tcrit.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-dredge(tcrit_global_mod)
-
-t50_global_mod <- glm(T50.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-dredge(t50_global_mod)
-
-t95_global_mod <- glm(T95.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-dredge(t95_global_mod)
-
-##best models
-tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
-summary(tcrit_mod)
-
-t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
-summary(t50_mod)
-
-t95_mod <- glm(T95.mn ~ year, data=outputs, na.action="na.fail")
-summary(t95_mod)
+####Can we remove these global models since we aren't using them#############
+# ##global models
+# tcrit_global_mod <- glm(Tcrit.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(tcrit_global_mod)
+# 
+# t50_global_mod <- glm(T50.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(t50_global_mod)
+# 
+# t95_global_mod <- glm(T95.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(t95_global_mod)
+# 
+# ##best models
+# tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
+# summary(tcrit_mod)
+# 
+# t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
+# summary(t50_mod)
+# 
+# t95_mod <- glm(T95.mn ~ year, data=outputs, na.action="na.fail")
+# summary(t95_mod)
 
 
 ##leaf temperature vs Tcrit model
@@ -113,17 +115,22 @@ tcrit_models <- glm(Tcrit.mn ~ month * year, data= jj_tcrit, na.action="na.fail"
 
 summary(tcrit_models)
 
-#use this model
-tcrit_model2 <- lme(Tcrit.mn ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit, na.action="na.fail")
+#build the full model and remove terms as needed
+tcrit_model2 <- lme(Tcrit.mn ~ as.factor(month) * as.factor(year) , random = ~ 1|species, data= jj_tcrit, na.action="na.fail")
 
-summary(tcrit_model2)
-anova(tcrit_model2)
+summary(tcrit_model2)#interaction not significant, remove and view performance
+#final best model that excludes the interaction
+tcrit_model3 <- lme(Tcrit.mn ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit, na.action="na.fail")
+summary(tcrit_model3)
+anova(tcrit_model3)
 
 ##Boot 1000 models
+##We provide this 1000 bootstrap approach just to have a look at the model with all data
+#however, there is so much data entering that basically everything is significant
 
 jj_boots <- jj_boots[complete.cases(jj_boots[,5]),]
 
-jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_tcrit %>% filter(species=="Acer saccharum"), na.action="na.fail")
+jj_boots_mod <- lme(tcrit ~ as.factor(month) + as.factor(year) , random = ~ 1|species, data= jj_boots, na.action="na.fail")
 
 summary(jj_boots_mod)
 
@@ -192,10 +199,39 @@ summary(elm_mod)
 # Leaf Temp TSM models ----
 # # # # # # # # # # # # # #
 
+#import data of mean thermal safety margin values for each species and sample
+#note the _safety columns are the thermal safety margin between tcrit, t50 or t95 versus leaf temperature
+#_safety_air columns are the thermal safety margin between tcrit, t50 or t95 versus air temperature
+therm <- read.csv("data/mean_thermal_safety_leaf_air.csv")
+#create ID column
+therm$ID<-paste(therm$Species,therm$year,therm$month,sep=".")
+therm2<-therm%>%
+  group_by(ID)%>%
+  pivot_longer(cols=c(tcrit_safety,tcrit_safety_air))
 #leaf to air thermal safety margins
-#leaf_tsm_model <- glm(Tcrit.mn ~ month * year, data= jj_tcrit, na.action="na.fail")
+#this will be a simple paired t-test as we are comparing thermals safety margin or tcrit v leaf and tcrit v air
+t.test(therm2$value~therm2$name,paired=TRUE,alternative="two.sided")#very small p-value means there is a difference
+#simple plot to visualize the difference - thermal safety margin compared to air is higher than compared to leaf
+ggplot(therm2,aes(x=name,y=value))+
+  geom_boxplot()
 
+#second set of models looking at how thermal safety margins may change over months and year
 
+#start with only thermal safety margin based on leaf temp
+leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+summary(leaf_tsm_model)#the interaction is not significant so drop it
+leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+summary(leaf_tsm_model)#best model very similar to tcrit model
+#safety margin increase from June to July - this is counterintuitive since temps are hotter in July. I guess trees
+#are raising tcrit faster than temp is increasing
+#safety margin decreases from 2022 to 2023. Might be related to SPEI index and that drought stressed trees have higher tcrit
+
+##build second model but with thermal safety margin compared to air temperature
+#I wonder if thise model is needed since we are arguing that air temperature is not a good measure of real danger
+leaf_tsm_model <- lme(tcrit_safety_air ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+summary(leaf_tsm_model)#the interaction is not significant so drop it, but year is also potentially not significant
+leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+summary(leaf_tsm_model)#once dropping the interaction year becomes significant. Again this model is similar to the tcrit only model
 
 
 
