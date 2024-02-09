@@ -60,6 +60,13 @@ tenn_clim<-tenn_clim[complete.cases(tenn_clim[,9]),]
 tenn1980 <- tenn_clim %>%
   filter(year>1979)
 
+# # # # # # # # # # # # # # # # # #
+# mean annual high temperature ----
+# # # # # # # # # # # # # # # # # #
+TN_mean <- tenn1980 %>%
+  group_by(year) %>%
+  summarise(mean_TMAX = max(TMAX))
+
 # # # # # # # # # # # # #
 # hottest day of year----
 # # # # # # # # # # # # #
@@ -124,7 +131,7 @@ days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
 days_32_plot
 
 # # # # # # # # # # # # # # 
-## four month Tcrit plot----
+# four month Tcrit plot----
 # # # # # # # # # # # # # # 
 
 #June 2022
