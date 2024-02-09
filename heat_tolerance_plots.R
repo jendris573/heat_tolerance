@@ -136,7 +136,6 @@ days_32 <- tenn1980 %>%
 #plot number of days above 32.2C
 days_32_plot <- ggplot(days_32, aes(x=year, y=number ))+
   geom_point() +
-  geom_smooth(method= lm)+
   #geom_hline(yintercept = 54.1, color= "red", linewidth = 1.25)+ #mean number of days above 32.2
   theme_bw(base_size = 18)+
   theme(panel.border = element_blank(), 
