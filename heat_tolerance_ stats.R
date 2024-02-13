@@ -222,7 +222,7 @@ ggplot(therm2,aes(x=name,y=value))+
 #start with only thermal safety margin based on leaf temp
 leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#the interaction is not significant so drop it
-
+dredge(leaf_tsm_model)
 leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#best model very similar to tcrit model
 
@@ -233,9 +233,10 @@ summary(leaf_tsm_model)#best model very similar to tcrit model
 ##build second model but with thermal safety margin compared to air temperature
 #I wonder if this model is needed since we are arguing that air temperature is not a good measure of real danger
 leaf_tsm_model <- lme(tcrit_safety_air ~ as.factor(month) * as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+dredge(leaf_tsm_model)
 summary(leaf_tsm_model)#the interaction is not significant so drop it, but year is also potentially not significant
 
-leaf_tsm_model <- lme(tcrit_safety ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
+leaf_tsm_model <- lme(tcrit_safety_air ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#once dropping the interaction year becomes significant. Again this model is similar to the tcrit only model
 
 
