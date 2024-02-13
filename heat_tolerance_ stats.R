@@ -203,6 +203,7 @@ summary(elm_mod)
 #note the _safety columns are the thermal safety margin between tcrit, t50 or t95 versus leaf temperature
 #_safety_air columns are the thermal safety margin between tcrit, t50 or t95 versus air temperature
 therm <- read.csv("data/mean_thermal_safety_leaf_air.csv")
+
 #create ID column
 therm$ID<-paste(therm$Species,therm$year,therm$month,sep=".")
 therm2<-therm%>%

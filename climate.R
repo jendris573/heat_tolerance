@@ -2,7 +2,7 @@
 ### Written by Joe Endris
 
 # # # # # # # # #
-## Libraries ----
+# Libraries ----
 # # # # # # # # #
 
 library(readxl)
@@ -16,9 +16,9 @@ library(multcomp)
 library(ggplot2)
 library(gridExtra)
 
-# # # # # # # # # # # # #
+# # # # # # # # # # # #
 ## Data Preparation ----
-# # # # # # # # # # # # #
+# # # # # # # # # # # #
 
 #Load NOAA Climate Data Online data
 tenn_clim<-read_excel("data/tenn1980.xlsx")
@@ -40,7 +40,7 @@ tenn_TMAX<-tenn_clim[complete.cases(tenn_clim[,5]),]
 #tenn_TMIN<-tenn_clim[complete.cases(tenn_clim[,6]),]
 
 # # # # # # # # # # # # # #
-## Climate data points ----
+# Climate data points ----
 # # # # # # # # # # # # # #
 
 #determine annual precipitation values
