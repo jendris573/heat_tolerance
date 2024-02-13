@@ -42,35 +42,35 @@ leaf_max_temp$location<-'images/leaf_image2.jpg'#change this filename to whateve
 #takes forever and you end up with a huge file size for the ggplot. Not sure why it does this.
 
 #Load NOAA Climate Data Online data
-tenn_clim<-read.csv("data/Tennessee_climate.csv")
+tenn1980<-read_excel("data/tenn1980.xlsx")
 
 #create column for year
-tenn_clim <- mutate(tenn_clim, year=year(tenn_clim$DATE))
+tenn1980 <- mutate(tenn1980, year=year(tenn1980$DATE))
 
 #create column for month
-tenn_clim <- mutate(tenn_clim, month=month(tenn_clim$DATE))
+tenn1980 <- mutate(tenn1980, month=month(tenn1980$DATE))
 
 ## create column for julian date##
-tenn_clim$julian_date <- yday(tenn_clim$DATE)
+tenn1980$julian_date <- yday(tenn1980$DATE)
 
 #omit NA in TMAX/TMIN recordings 
-tenn_clim<-tenn_clim[complete.cases(tenn_clim[,9]),]
+tenn1980<-tenn1980[complete.cases(tenn1980[,9]),]
 
-#filter for 1980-present
-tenn1980 <- tenn_clim %>%
-  filter(year>1979)
+heat_season <- tenn1980 %>%
+  filter(julian_date>152) %>%
+  filter(julian_date<273)
 
 # # # # # # # # # # # # # # # # # #
 # mean annual high temperature ----
 # # # # # # # # # # # # # # # # # #
-TN_mean <- tenn1980 %>%
+TN_mean <- heat_season %>%
   group_by(year) %>%
   summarise(mean_TMAX = mean(TMAX))
 
 mean_TMAX_plot <- ggplot(TN_mean, aes(x=year, y= mean_TMAX))+
   geom_point()+
   geom_smooth(method= lm)+
-  scale_y_continuous(limits = c(17.5, 25)) +
+  #scale_y_continuous(limits = c(17.5, 25)) +
   labs(
     y= "Temperature °C",
     x= "Year")+
@@ -90,13 +90,11 @@ mean_TMAX_plot
 # # # # # # # # # # # # #
 
 #determine hottest day by year
-TN_TMAX <- tenn1980 %>%
+TN_TMAX <- heat_season %>%
   group_by(year) %>%
   summarise(abs_TMAX = max(TMAX))
 
-mean_TMAX <- tenn1980 %>%
-  filter(julian_date > 120) %>%
-  filter(julian_date < 274) %>%
+mean_TMAX <- heat_season %>%
   group_by(julian_date) %>%
   summarise(abs_TMAX = max(TMAX))
 
@@ -129,7 +127,7 @@ record_TMAX_plot
 # # # # # # # # # # # # # # # #
 
 #number of days above 32.2C (90F)
-days_32 <- tenn1980 %>%
+days_32 <- heat_season %>%
   group_by(year) %>%
   summarise(number=sum(TMAX>32.19))
 

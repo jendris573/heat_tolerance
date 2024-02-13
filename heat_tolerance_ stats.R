@@ -72,28 +72,6 @@ jj_boots$year <- as.factor(lubridate::year(jj_boots$Date2))
 # Statistical Tests ----
 # # # # # # # # # # # # #
 
-####Can we remove these global models since we aren't using them#############
-# ##global models
-# tcrit_global_mod <- glm(Tcrit.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-# dredge(tcrit_global_mod)
-# 
-# t50_global_mod <- glm(T50.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-# dredge(t50_global_mod)
-# 
-# t95_global_mod <- glm(T95.mn ~ year * julian_date, data=outputs, na.action="na.fail")
-# dredge(t95_global_mod)
-# 
-# ##best models
-# tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
-# summary(tcrit_mod)
-# 
-# t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
-# summary(t50_mod)
-# 
-# t95_mod <- glm(T95.mn ~ year, data=outputs, na.action="na.fail")
-# summary(t95_mod)
-
-
 ##leaf temperature vs Tcrit model
 leaf_temp_tcrit_mod <- glm(Tcrit.mn ~ leaf_temp, data=leaf_temps, na.action="na.fail")
 
@@ -137,7 +115,6 @@ summary(jj_boots_mod)
 # # # # # # # # # # #
 # Species models ----
 # # # # # # # # # # #
-
 
 #maple model
 maple_mod <- glm(tcrit ~ as.factor(month) * as.factor(year), data= jj_boots %>% filter(species=="Acer saccharum"), na.action="na.fail")
@@ -240,6 +217,27 @@ summary(leaf_tsm_model)#the interaction is not significant so drop it, but year 
 leaf_tsm_model <- lme(tcrit_safety_air ~ as.factor(month) + as.factor(year) , random = ~ 1|Species, data= therm, na.action="na.fail")
 summary(leaf_tsm_model)#once dropping the interaction year becomes significant. Again this model is similar to the tcrit only model
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+### Unused Statisical Models ----
 
-
-
+##global models
+# tcrit_global_mod <- glm(Tcrit.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(tcrit_global_mod)
+# 
+# t50_global_mod <- glm(T50.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(t50_global_mod)
+# 
+# t95_global_mod <- glm(T95.mn ~ year * julian_date, data=outputs, na.action="na.fail")
+# dredge(t95_global_mod)
+# 
+# ##best models
+# tcrit_mod <- glm(Tcrit.mn ~ year, data=outputs, na.action="na.fail")
+# summary(tcrit_mod)
+# 
+# t50_mod <- glm(T50.mn ~ year, data=outputs, na.action="na.fail")
+# summary(t50_mod)
+# 
+# t95_mod <- glm(T95.mn ~ year, data=outputs, na.action="na.fail")
+# summary(t95_mod)
