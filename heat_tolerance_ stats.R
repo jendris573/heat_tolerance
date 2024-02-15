@@ -68,6 +68,22 @@ jj_boots$month <- as.factor(lubridate::month(jj_boots$Date2))
 #create column for year
 jj_boots$year <- as.factor(lubridate::year(jj_boots$Date2))
 
+# # # # # # # # # # # # # # # #
+# Mean Thermal tolerances ----
+# # # # # # # # # # # # # # # #
+
+tcrit_mean <- outputs %>%
+  group_by(species, year) %>%
+  summarise(mean_tcrit=mean(Tcrit.mn))
+
+t50_mean <- outputs %>%
+  group_by(species, year) %>%
+  summarise(mean_t50=mean(T50.mn))
+
+t95_mean <- outputs %>%
+  group_by(species, year) %>%
+  summarise(mean_t95=mean(T95.mn))
+
 # # # # # # # # # # # # #
 # Statistical Tests ----
 # # # # # # # # # # # # #
