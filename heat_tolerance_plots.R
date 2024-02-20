@@ -164,10 +164,11 @@ June2022 <- ggplot(tcrit%>%
   coord_flip()+
   #geom_image has to come first so it is drawn behind everything else, that way if white space is in image,
   #it doesn't show up
-  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=id,image=location),size=0.05)+
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -182,10 +183,11 @@ June2022
 July2022 <- ggplot(tcrit%>%
                      filter(year==2022,month==7), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
-  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=id,image=location),size=0.05)+
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -201,10 +203,11 @@ July2022
 June2023 <- ggplot(tcrit%>%
                      filter(year==2023,month==6), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
-  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=id,image=location),size=0.05)+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -220,9 +223,10 @@ June2023
 July2023 <- ggplot(tcrit%>%
                      filter(year==2023,month==7), aes(y= Tcrit.mn, x= id)) +
   coord_flip()+
-  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=id,image=location),size=0.05)+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
+  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
   scale_x_discrete(limit=rev)+
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
@@ -237,3 +241,176 @@ July2023 <- ggplot(tcrit%>%
 July2023
 
 grid.arrange(June2022,July2022, June2023,July2023,ncol=2)
+
+# # # # # # # # # # # # #
+# four month T50 plot----
+# # # # # # # # # # # # #
+
+#June 2022
+June2022_t50 <- ggplot(tcrit%>%
+                     filter(year==2022,month==6), aes(y= T50.mn, x= id)) +
+  coord_flip()+
+  #geom_image has to come first so it is drawn behind everything else, that way if white space is in image,
+  #it doesn't show up
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 60)+
+  ggtitle("June 2022")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+
+July2022_t50 <- ggplot(tcrit%>%
+                     filter(year==2022,month==7), aes(y= T50.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
+  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 60)+
+  ggtitle("July 2022")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+June2023_t50 <- ggplot(tcrit%>%
+                     filter(year==2023,month==6), aes(y= T50.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 60)+
+  ggtitle("June 2023")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+
+July2023_t50 <- ggplot(tcrit%>%
+                     filter(year==2023,month==7), aes(y= T50.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
+  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
+  scale_x_discrete(limit=rev)+
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 60)+
+  ggtitle("July 2023")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+
+grid.arrange(June2022_t50,July2022_t50, June2023_t50,July2023_t50,ncol=2)
+
+# # # # # # # # # # # # #
+# four month T95 plot----
+# # # # # # # # # # # # #
+
+#June 2022
+June2022_t95 <- ggplot(tcrit%>%
+                     filter(year==2022,month==6), aes(y= T95.mn, x= id)) +
+  coord_flip()+
+  #geom_image has to come first so it is drawn behind everything else, that way if white space is in image,
+  #it doesn't show up
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 80)+
+  ggtitle("June 2022")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+July2022_t95 <- ggplot(tcrit%>%
+                     filter(year==2022,month==7), aes(y= T95.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2022"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
+  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 80)+
+  ggtitle("July 2022")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+June2023_t95 <- ggplot(tcrit%>%
+                     filter(year==2023,month==6), aes(y= T95.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  scale_x_discrete(limit=rev)+
+  geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
+  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 80)+
+  ggtitle("June 2023")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+July2023_t95 <- ggplot(tcrit%>%
+                     filter(year==2023,month==7), aes(y= T95.mn, x= id)) +
+  coord_flip()+
+  geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
+  geom_point()+
+  geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
+  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
+  scale_x_discrete(limit=rev)+
+  ylab("Critical Temperature (°C)")+
+  xlab("Species")+
+  ylim(30, 80)+
+  ggtitle("July 2023")+
+  theme(legend.position="none")+
+  theme(panel.border = element_blank(),  
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+grid.arrange(June2022_t95,July2022_t95, June2023_t95,July2023_t95,ncol=2)
+
+
