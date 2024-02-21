@@ -175,9 +175,9 @@ heating_data4$Species<-factor(heating_data4$Species,levels=levels(as.factor(heat
 levels(heating_data4$Species)
 #making a four panel figure with year and month separated
 g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
-  #scale_y_discrete(expand=c(0.01, 0)) +
-xlim(-15,15) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
+  #scale_x_discrete(expand=c(0.01, 0)) +
+  xlim(-15,15) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -192,13 +192,14 @@ xlim(-15,15) +
   ggtitle("June 2022")
 g7
 g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
-  #scale_y_discrete(expand=c(0.01, 0)) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
+  #scale_x_discrete(expand=c(0.01, 0)) +
   xlim(-15,15) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
         legend.position = c(0.2,0.7),
+        legend.background = element_rect(fill="transparent"),
         axis.title.y=element_blank(),
         plot.title = element_text(hjust = 0.1,vjust=-5),
         axis.text.x=element_text(size=14))+
@@ -210,8 +211,8 @@ g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder
 g8
 
 g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
-  #scale_y_discrete(expand=c(0.01, 0)) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
+  #scale_x_discrete(expand=c(0.01, 0)) +
   xlim(-15,15) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
@@ -227,9 +228,10 @@ g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder
 g9
 
 g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  xlim(-15,15) +
+  scale_x_continuous(limits=c(-15.5,15)) +
+  #xlim(-15,15) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -263,9 +265,9 @@ heating_data4$Species<-factor(heating_data4$Species,levels=levels(as.factor(heat
 levels(heating_data4$Species)
 #making a four panel figure with year and month separated
 g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(-.5,20) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -277,17 +279,18 @@ g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
   #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
-  ggtitle("June 2022")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("June 2022")
+  #scale_x_continuous(expand=c(0,0.1))
 g7
 g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = 0.9,alpha=0.8) +
+  geom_density_ridges2(scale = 0.9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(5,20) +
+  xlim(-.5,20) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
-        legend.position = c(0.8,0.8),
+        legend.position = c(0.3,0.7),
+        legend.background = element_rect(fill="transparent"),
         axis.title.y=element_blank(),
         plot.title = element_text(hjust = 0.1,vjust=-5),
         axis.text.x=element_text(size=14))+
@@ -295,14 +298,14 @@ g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
   #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
-  ggtitle("July 2022")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("July 2022")
+  #scale_x_continuous(expand=c(0,0.1))
 g8
 
 g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(-.5,20) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -313,14 +316,14 @@ g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder
   #geom_vline(xintercept=0,linewidth=1)+
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
-  ggtitle("June 2023")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("June 2023")
+  #scale_x_continuous(expand=c(0,0.1))
 g9
 
 g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(-.5,20) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -331,8 +334,8 @@ g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorde
   #geom_vline(xintercept=0,linewidth=1)+
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
-  ggtitle("July 2023")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("July 2023")
+  #scale_x_continuous(expand=c(0,0.1))
 g10
 grid.arrange(g7,g8,g9,g10,ncol=2)# #start to create some plots from these summary ----
 
@@ -356,9 +359,9 @@ heating_data4$Species<-factor(heating_data4$Species,levels=levels(as.factor(heat
 levels(heating_data4$Species)
 #making a four panel figure with year and month separated
 g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(0,30) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -370,32 +373,31 @@ g7<-ggplot(data=heating_data4%>%filter(year==2022&month==6),aes(x=diff,y=reorder
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
   #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
-  ggtitle("June 2022")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("June 2022")
 g7
 g8<-ggplot(data=heating_data4%>%filter(year==2022&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = 0.9,alpha=0.8) +
+  geom_density_ridges2(scale = 0.9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(5,20) +
+  xlim(0,30) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
-        legend.position = c(0.8,0.8),
+        legend.position = c(0.27,0.63),
         axis.title.y=element_blank(),
+        legend.background = element_rect(fill="transparent"),
         plot.title = element_text(hjust = 0.1,vjust=-5),
         axis.text.x=element_text(size=14))+
   #geom_vline(xintercept=0,linewidth=1)+
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
   #scale_alpha_manual(values=c(0.8,0.8,0.8,0.8),guide="none")+
-  ggtitle("July 2022")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("July 2022")
 g8
 
 g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(0,30) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -406,14 +408,13 @@ g9<-ggplot(data=heating_data4%>%filter(year==2023&month==6),aes(x=diff,y=reorder
   #geom_vline(xintercept=0,linewidth=1)+
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
-  ggtitle("June 2023")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("June 2023")
 g9
 
 g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorder(Species,desc(Species)),fill=type))+
-  geom_density_ridges2(scale = .9,alpha=0.8) +
+  geom_density_ridges2(scale = .9,alpha=0.8,rel_min_height = 0.01) +
   #scale_y_discrete(expand=c(0.01, 0)) +
-  #xlim(0,20) +
+  xlim(0,30) +
   xlab("Thermal safety margin")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
         panel.background=element_blank(),axis.line=element_line(colour="black"),
@@ -424,8 +425,7 @@ g10<-ggplot(data=heating_data4%>%filter(year==2023&month==7),aes(x=diff,y=reorde
   #geom_vline(xintercept=0,linewidth=1)+
   scale_fill_manual(name="Month",values=c("gray30","gray70"),
                     labels=c("Safety margin - air","Safety margin - leaf"))+
-  ggtitle("July 2023")+
-  scale_x_continuous(expand=c(0,0.1))
+  ggtitle("July 2023")
 g10
 grid.arrange(g7,g8,g9,g10,ncol=2)# #start to create some plots from these summary ----
 
