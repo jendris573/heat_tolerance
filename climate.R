@@ -2,7 +2,7 @@
 ### Written by Joe Endris
 
 # # # # # # # # #
-## Libraries ----
+# Libraries ----
 # # # # # # # # #
 
 library(readxl)
@@ -16,9 +16,9 @@ library(multcomp)
 library(ggplot2)
 library(gridExtra)
 
-# # # # # # # # # # # # #
+# # # # # # # # # # # #
 ## Data Preparation ----
-# # # # # # # # # # # # #
+# # # # # # # # # # # #
 
 #Load NOAA Climate Data Online data
 tenn_clim<-read_excel("data/tenn1980.xlsx")
@@ -32,26 +32,41 @@ tenn_clim <- mutate(tenn_clim, month=month(tenn_clim$DATE))
 ## create column for julian date##
 tenn_clim$julian_date <- yday(tenn_clim$DATE)
 
-#omit NA in TMAX recordings 
-tenn_TMAX<-tenn_clim[complete.cases(tenn_clim[,5]),]
-#omit NA in precipitation recordings 
-#tenn_precip<-tenn_clim[complete.cases(tenn_clim[,4]),]
-#omit NA in TMIN recordings 
-#tenn_TMIN<-tenn_clim[complete.cases(tenn_clim[,6]),]
+# # # # # # # # # # # # # #
+# Climate data points ----
+# # # # # # # # # # # # # #
 
-# # # # # # # # # # # # # #
-## Climate data points ----
-# # # # # # # # # # # # # #
+#omit NA in precipitation recordings 
+tenn_precip<-tenn_clim[complete.cases(tenn_clim[,6]),]
 
 #determine annual precipitation values
 precip <- tenn_precip %>%
   group_by(year) %>%
   dplyr::summarise(annual_precip = sum(PRCP))
 
+mean(precip$annual_precip)
+
+#omit NA in TMAX recordings 
+tenn_TMAX<-tenn_clim[complete.cases(tenn_clim[,9]),]
+
 #average annual TMAX
 TMAX <- tenn_TMAX %>%
   group_by(year) %>%
   dplyr::summarise(annual_TMAX = mean(TMAX))
+
+#heat season mean TMAX
+heat_season_TMAX <- tenn_TMAX %>%
+  filter(julian_date>152) %>%
+  filter(julian_date<273)
+
+mean(heat_season_TMAX$TMAX)
+
+heat_season_TMAX <- heat_season_TMAX %>%
+  group_by(year) %>%
+  dplyr::summarise(annual_TMAX = mean(TMAX))
+
+#omit NA in TMIN recordings 
+tenn_TMIN<-tenn_clim[complete.cases(tenn_clim[,10]),]
 
 #average annual TMIN
 TMIN <- tenn_TMIN %>%
@@ -138,16 +153,20 @@ july2022_TMAX <- tenn_clim %>%
 # Climate statistical models ----
 # # # # # # # # # # # # # # # # #
 
-heat_season <- tenn1980 %>%
-  filter(julian_date>120) %>%
-  filter(julian_date<275)
+heat_season <- tenn_clim %>%
+  filter(julian_date>152) %>%
+  filter(julian_date<273)
 
-heat_season_mod <- lm(TMAX ~ year, data=heat_season)
+hs_mod <- lm(TMAX ~ year, data=heat_season)
+summary(hs_mod)
 
-summary(high_temp_mod)
+hs_jd_mod1 <- lm(TMAX ~ julian_date * year, data=heat_season)
+summary(hs_jd_mod1)
+hs_jd_mod2 <- lm(TMAX ~ julian_date + year, data=heat_season)
+summary(hs_jd_mod2)
 
 #filter 1980 data for may only
-may_mean_tmax <- tenn1980 %>%
+may_mean_tmax <- tenn_TMAX %>%
   group_by(julian_date, year) %>%
   filter(julian_date>120) %>%
   filter(julian_date<152) %>%
@@ -157,7 +176,7 @@ may_model <- glm(temp ~ julian_date + year, data = may_mean_tmax, na.action="na.
 summary(may_model)
 
 #filter 1980 data for June only
-june_mean_tmax <- tenn1980 %>%
+june_mean_tmax <- tenn_TMAX %>%
   group_by(julian_date, year) %>%
   filter(julian_date>151) %>%
   filter(julian_date<182) %>%
@@ -167,7 +186,7 @@ june_model <- glm(temp ~ julian_date + year, data = june_mean_tmax, na.action="n
 summary(june_model)
 
 #filter 1980 data for July only
-july_mean_tmax <- tenn1980 %>%
+july_mean_tmax <- tenn_TMAX %>%
   group_by(julian_date, year) %>%
   filter(julian_date>181) %>%
   filter(julian_date<213) %>%
@@ -177,7 +196,7 @@ july_model <- glm(temp ~ julian_date + year, data = july_mean_tmax, na.action="n
 summary(july_model)
 
 #filter 1980 data for August only
-aug_mean_tmax <- tenn1980 %>%
+aug_mean_tmax <- tenn_TMAX %>%
   group_by(julian_date, year) %>%
   filter(julian_date>212) %>%
   filter(julian_date<244) %>%
@@ -187,7 +206,7 @@ aug_model <- glm(temp ~ julian_date + year, data = aug_mean_tmax, na.action="na.
 summary(aug_model)
 
 #filter 1980 data for Sept only
-sept_mean_tmax <- tenn1980 %>%
+sept_mean_tmax <- tenn_TMAX %>%
   group_by(julian_date, year) %>%
   filter(julian_date>243) %>%
   filter(julian_date<274) %>%
@@ -196,7 +215,8 @@ sept_mean_tmax <- tenn1980 %>%
 sept_model <- glm(temp ~ julian_date + year, data = sept_mean_tmax, na.action="na.fail")
 summary(sept_model)
 
-annual_model <- glm(TMAX ~ julian_date + year, data = tenn1980 )
+
+annual_model <- glm(TMAX ~ julian_date + year, data = tenn_TMAX )
 summary(annual_model)
 
 
