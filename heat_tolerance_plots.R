@@ -168,7 +168,8 @@ June2022 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -187,7 +188,8 @@ July2022 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.9, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -207,7 +209,8 @@ June2023 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 55)+
@@ -226,7 +229,8 @@ July2023 <- ggplot(tcrit%>%
   geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   geom_errorbar(aes(ymax=Tcrit.uci,ymin=Tcrit.lci),width=0.5)+
-  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 37.2, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   scale_x_discrete(limit=rev)+
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
@@ -256,7 +260,8 @@ June2022_t50 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 60)+
@@ -275,7 +280,8 @@ July2022_t50 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
-  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.9, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 60)+
@@ -294,7 +300,8 @@ June2023_t50 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 60)+
@@ -313,7 +320,8 @@ July2023_t50 <- ggplot(tcrit%>%
   geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   geom_errorbar(aes(ymax=T50.uci,ymin=T50.lci),width=0.5)+
-  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 37.2, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   scale_x_discrete(limit=rev)+
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
@@ -343,7 +351,8 @@ June2022_t95 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 80)+
@@ -361,7 +370,8 @@ July2022_t95 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
-  geom_hline(yintercept = 38.9, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.9, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 80)+
@@ -380,7 +390,8 @@ June2023_t95 <- ggplot(tcrit%>%
   geom_point()+
   scale_x_discrete(limit=rev)+
   geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
-  geom_hline(yintercept = 38.3, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 38.3, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
   ylim(30, 80)+
@@ -398,7 +409,8 @@ July2023_t95 <- ggplot(tcrit%>%
   geom_image(data=subset(leaf_max_temp, year=="2023"), aes(y=leaf_temp, x=species,image=location),size=0.05)+
   geom_point()+
   geom_errorbar(aes(ymax=T95.uci,ymin=T95.lci),width=0.5)+
-  geom_hline(yintercept = 37.2, color= "red")+ #high temp for the month
+  geom_hline(yintercept = 37.2, color= "blue")+ #high temp for the month
+  geom_hline(yintercept = 44.4, color= "red")+ #record high temp since 1980
   scale_x_discrete(limit=rev)+
   ylab("Critical Temperature (°C)")+
   xlab("Species")+
